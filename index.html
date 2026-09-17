@@ -4,6 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0F1218" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="RunPlan 5:30" />
+<link rel="apple-touch-icon" href="./icon-192.png" />
+<link rel="manifest" href="./manifest.webmanifest" />
 <title>แผนวิ่ง + เวท 12 สัปดาห์ · 8:00 → 5:30</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,230 +16,251 @@
 <style>
   :root{
     --ink:#14161B; --paper:#F1F2EF; --surface:#FFFFFF;
-    --hero:#0F1218; --hero-2:#171C26;
+    --hero:#0F1218;
     --line:#E2E3DF; --line-2:#EDEEEA;
     --muted:#6B7178; --muted-2:#9AA0A6;
     --brand:#2F66F5;
     --speed:#E8503A; --tempo:#DE8A2C; --endure:#12A08C; --strength:#6D5AE8; --rest:#98A0AA;
     --good:#1FA971;
+    --nav-bg:rgba(255,255,255,.94);
     --radius:14px;
     --shadow:0 1px 2px rgba(20,22,27,.04), 0 8px 22px rgba(20,22,27,.05);
-    --maxw:760px;
-    --navh:64px;
+    --maxw:760px; --navh:60px;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+    --ink:#E8EAED; --paper:#0D1015; --surface:#171B22;
+    --line:#272C35; --line-2:#1E232B; --muted:#9BA2AC; --muted-2:#6C737D;
+    --brand:#5A8CFF; --good:#37C08A;
+    --nav-bg:rgba(19,23,29,.94);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 22px rgba(0,0,0,.35);
+  }}
+  :root[data-theme="dark"]{
+    --ink:#E8EAED; --paper:#0D1015; --surface:#171B22;
+    --line:#272C35; --line-2:#1E232B; --muted:#9BA2AC; --muted-2:#6C737D;
+    --brand:#5A8CFF; --good:#37C08A;
+    --nav-bg:rgba(19,23,29,.94);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 22px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html{scroll-behavior:smooth;}
-  body{
-    margin:0;background:var(--paper);color:var(--ink);
+  body{margin:0;background:var(--paper);color:var(--ink);
     font-family:"Anuphan",system-ui,-apple-system,"Segoe UI",sans-serif;
     font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
     padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom) + 8px);
-  }
+    transition:background .2s ease,color .2s ease;}
   .num{font-family:"Barlow Condensed","Anuphan",sans-serif;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.01em;}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px;}
   a{color:var(--brand);}
-  section{padding:26px 0;scroll-margin-top:14px;}
+  section{padding:24px 0;scroll-margin-top:14px;}
   button{font-family:inherit;}
+  input,select{font-size:16px;font-family:inherit;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--surface);color:var(--ink);}
 
-  /* ---------- HERO ---------- */
-  .hero{background:radial-gradient(130% 150% at 88% -20%, #1E2635 0%, var(--hero) 58%);color:#EDEFF4;padding:26px 0 22px;padding-top:calc(26px + env(safe-area-inset-top));}
+  /* HERO */
+  .hero{background:radial-gradient(130% 150% at 88% -20%, #1E2635 0%, var(--hero) 58%);color:#EDEFF4;padding:22px 0;padding-top:calc(18px + env(safe-area-inset-top));}
+  .hero-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .themebtn{background:#161C27;border:1px solid #2A3342;color:#EDEFF4;border-radius:100px;width:38px;height:38px;font-size:17px;cursor:pointer;}
   .kicker{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:#AEB6C4;padding:5px 11px;border:1px solid #2A3342;border-radius:100px;background:#161C27;}
   .kicker b{color:#EDEFF4;font-weight:600;}
-  h1.title{font-weight:700;font-size:clamp(23px,6.5vw,32px);line-height:1.15;margin:14px 0 5px;letter-spacing:-.01em;}
-  .subtitle{color:#AEB6C4;margin:0 0 20px;font-size:14px;}
+  h1.title{font-weight:700;font-size:clamp(22px,6.5vw,32px);line-height:1.15;margin:4px 0 5px;letter-spacing:-.01em;}
+  .subtitle{color:#AEB6C4;margin:0 0 18px;font-size:13.5px;}
   .pace-transform{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;}
   .pace-block .lbl{font-size:12px;color:#8C95A5;margin-bottom:1px;}
-  .pace-block .val{font-family:"Barlow Condensed";font-weight:700;font-size:clamp(44px,15vw,72px);line-height:.88;}
-  .pace-from .val{color:#7E8899;}
-  .pace-to .val{color:#6FE3C6;}
-  .arrow{font-family:"Barlow Condensed";font-size:clamp(30px,9vw,48px);color:#4A5568;padding-bottom:6px;}
+  .pace-block .val{font-family:"Barlow Condensed";font-weight:700;font-size:clamp(42px,15vw,70px);line-height:.88;}
+  .pace-from .val{color:#7E8899;} .pace-to .val{color:#6FE3C6;}
+  .arrow{font-family:"Barlow Condensed";font-size:clamp(28px,9vw,46px);color:#4A5568;padding-bottom:6px;}
   .pace-note{font-size:12px;color:#8C95A5;padding-bottom:8px;}
-
-  .statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#242C3A;border:1px solid #242C3A;border-radius:12px;overflow:hidden;margin-top:22px;}
-  .stat{background:#12161E;padding:12px 10px;text-align:center;}
-  .stat .n{font-family:"Barlow Condensed";font-weight:700;font-size:26px;color:#EDEFF4;line-height:1;}
-  .stat .n .small{font-size:14px;color:#8C95A5;}
-  .stat .k{font-size:11px;color:#8C95A5;margin-top:5px;}
+  .statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#242C3A;border:1px solid #242C3A;border-radius:12px;overflow:hidden;margin-top:20px;}
+  .stat{background:#12161E;padding:11px 8px;text-align:center;}
+  .stat .n{font-family:"Barlow Condensed";font-weight:700;font-size:25px;color:#EDEFF4;line-height:1;}
+  .stat .n .small{font-size:13px;color:#8C95A5;}
+  .stat .k{font-size:10.5px;color:#8C95A5;margin-top:4px;}
   .stat.hi .n{color:#6FE3C6;}
 
-  /* ---------- TODAY CARD ---------- */
-  #today{padding-top:22px;}
+  /* TODAY */
+  #today{padding-top:20px;}
   .today-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;}
-  .today-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;background:var(--ink);color:#fff;}
+  .today-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 18px;background:var(--hero);color:#fff;}
   .today-head .lbl{font-size:13px;color:#B9BEC6;}
   .today-head .wk{font-size:13px;color:#6FE3C6;font-weight:600;}
   .today-body{padding:18px;}
-  .today-body .badge{margin-bottom:8px;}
-  .today-body .tt{font-size:20px;font-weight:700;margin:0 0 4px;}
-  .today-body .td{color:var(--muted);font-size:15px;margin:0 0 16px;}
+  .today-body .tt{font-size:19px;font-weight:700;margin:0 0 4px;}
+  .today-body .td{color:var(--muted);font-size:14.5px;margin:0 0 16px;}
   .today-body .td .hl{color:var(--ink);font-weight:500;}
-  .big-btn{width:100%;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .1s ease;}
+  .big-btn{width:100%;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .1s ease;}
   .big-btn:active{transform:scale(.98);}
   .big-btn.todo{background:var(--good);color:#fff;}
-  .big-btn.done{background:#EAF6F0;color:var(--good);border:1.5px solid var(--good);}
-  .today-rest{text-align:center;padding:26px 18px;}
-  .today-rest .em{font-size:34px;}
-  .today-rest p{margin:8px 0 0;color:var(--muted);}
-  .today-setup{padding:18px;}
-  .today-setup p{margin:0 0 12px;color:var(--muted);font-size:14.5px;}
+  .big-btn.done{background:transparent;color:var(--good);border:1.5px solid var(--good);}
+  .today-rest{text-align:center;padding:24px 18px;}
+  .today-rest .em{font-size:32px;} .today-rest p{margin:8px 0 0;color:var(--muted);}
+  .today-setup{padding:18px;} .today-setup p{margin:0 0 12px;color:var(--muted);font-size:14px;}
   .today-setup .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-  .today-setup label{font-size:14px;font-weight:600;}
-  input[type=date],input[type=number],input[type=text]{font-size:16px;font-family:inherit;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--surface);color:var(--ink);}
-  .today-info{padding:11px 18px;border-top:1px solid var(--line-2);font-size:13.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+  .today-info{padding:10px 18px;border-top:1px solid var(--line-2);font-size:13px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;}
   .today-info b{color:var(--ink);}
-  .today-info .chg{cursor:pointer;color:var(--brand);}
+  .chip{display:inline-flex;align-items:center;gap:4px;background:var(--line-2);border-radius:100px;padding:3px 10px;font-size:12.5px;color:var(--ink);}
+  .chg{cursor:pointer;color:var(--brand);}
 
-  /* ---------- PROGRESS ---------- */
+  /* PROGRESS */
   .progbar-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);}
   .progbar-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:8px;flex-wrap:wrap;}
   .progbar-top .pct{font-family:"Barlow Condensed";font-weight:700;font-size:30px;line-height:1;}
-  .progbar-top .cnt{color:var(--muted);font-size:13.5px;}
+  .progbar-top .cnt{color:var(--muted);font-size:13px;}
   .track{height:12px;background:var(--line-2);border-radius:100px;overflow:hidden;}
-  .track > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),#5AA2FF);border-radius:100px;transition:width .5s ease;}
-  .reset{margin-top:12px;background:none;border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:9px 14px;font-size:13px;cursor:pointer;}
-  .reset:active{border-color:var(--speed);color:var(--speed);}
+  .track>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),#5AA2FF);border-radius:100px;transition:width .5s ease;}
 
-  /* ---------- SECTION HEAD ---------- */
-  .sec-head{margin-bottom:16px;}
+  /* SECTION HEAD */
+  .sec-head{margin-bottom:14px;}
   .sec-head h2{font-size:20px;font-weight:700;margin:0 0 2px;letter-spacing:-.01em;}
-  .sec-head p{margin:0;color:var(--muted);font-size:13.5px;}
+  .sec-head p{margin:0;color:var(--muted);font-size:13px;}
 
-  /* ---------- WEEK NAV (horizontal scroll) ---------- */
+  /* WEEK NAV */
   .phasebar{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
   .phase-pill{font-size:12px;color:var(--muted);padding:5px 10px;border-radius:100px;background:var(--surface);border:1px solid var(--line);}
-  .weeknav{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding:2px 2px 8px;margin-bottom:16px;scrollbar-width:none;}
+  .weeknav{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 2px 8px;margin-bottom:14px;scrollbar-width:none;}
   .weeknav::-webkit-scrollbar{display:none;}
-  .wtab{flex:0 0 auto;width:62px;scroll-snap-align:center;position:relative;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 4px 8px;cursor:pointer;text-align:center;transition:border-color .12s ease;}
+  .wtab{flex:0 0 auto;width:60px;position:relative;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 4px 8px;cursor:pointer;text-align:center;color:var(--ink);transition:border-color .12s;}
   .wtab .wl{font-size:10px;color:var(--muted);}
-  .wtab .wn{font-family:"Barlow Condensed";font-weight:700;font-size:23px;line-height:1;margin-top:1px;}
-  .wtab.active{border-color:var(--ink);background:var(--ink);color:#fff;}
-  .wtab.active .wl{color:#B9BEC6;}
+  .wtab .wn{font-family:"Barlow Condensed";font-weight:700;font-size:22px;line-height:1;margin-top:1px;}
+  .wtab.active{border-color:var(--brand);background:var(--brand);color:#fff;}
+  .wtab.active .wl{color:#dbe6ff;}
   .wtab .dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:transparent;}
-  .wtab.done .dot{background:var(--good);}
-  .wtab.partial .dot{background:var(--tempo);}
+  .wtab.done .dot{background:var(--good);} .wtab.partial .dot{background:var(--tempo);}
   .wtab.today-week{box-shadow:0 0 0 2px var(--brand);}
 
-  /* ---------- WEEK PANEL ---------- */
-  .weekmeta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:14px;}
+  /* WEEK PANEL */
+  .weekmeta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:10px;}
   .weekmeta .phase{font-size:12px;font-weight:600;padding:4px 10px;border-radius:8px;color:#fff;}
-  .weekmeta .focus{color:var(--muted);font-size:13.5px;flex:1;min-width:160px;}
-  .weekmeta .wprog{font-size:13px;color:var(--muted);}
-
+  .weekmeta .focus{color:var(--muted);font-size:13px;flex:1;min-width:150px;}
+  .weeksum{display:flex;gap:14px;margin-bottom:14px;font-size:13px;color:var(--muted);}
+  .weeksum b{color:var(--ink);font-family:"Barlow Condensed";font-size:16px;}
   .days{display:grid;gap:9px;}
-  .day{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-left-width:4px;border-radius:12px;padding:13px 14px;box-shadow:var(--shadow);cursor:pointer;user-select:none;transition:transform .1s ease;}
-  .day.tappable:active{transform:scale(.99);}
-  .day.rest{background:#F7F8F6;box-shadow:none;cursor:default;border-left-color:var(--rest)!important;}
-  .day .dname{font-family:"Barlow Condensed";font-weight:600;font-size:13px;color:var(--muted);text-align:center;width:40px;flex-shrink:0;padding-top:2px;}
-  .day .dname .big{display:block;font-size:21px;color:var(--ink);line-height:1;margin-bottom:1px;}
+  .day{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-left-width:4px;border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);}
+  .day .tapzone{display:flex;gap:12px;flex:1;min-width:0;cursor:pointer;user-select:none;}
+  .day.rest{background:var(--line-2);box-shadow:none;border-left-color:var(--rest)!important;}
+  .day.rest .tapzone{cursor:default;}
+  .day .dname{font-family:"Barlow Condensed";font-weight:600;font-size:12.5px;color:var(--muted);text-align:center;width:38px;flex-shrink:0;padding-top:2px;}
+  .day .dname .big{display:block;font-size:20px;color:var(--ink);line-height:1;}
   .day.today{box-shadow:0 0 0 2px var(--brand),var(--shadow);}
   .day .mid{flex:1;min-width:0;}
-  .badge{display:inline-block;font-size:11.5px;font-weight:600;color:#fff;padding:2px 9px;border-radius:7px;margin-bottom:5px;}
-  .day .dtitle{font-weight:600;font-size:15px;margin:0 0 2px;}
-  .day .ddet{color:var(--muted);font-size:13.5px;margin:0;}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#fff;padding:2px 9px;border-radius:7px;margin-bottom:4px;}
+  .day .dtitle{font-weight:600;font-size:14.5px;margin:0 0 2px;}
+  .day .ddet{color:var(--muted);font-size:13px;margin:0;}
   .day .ddet .hl{color:var(--ink);font-weight:500;}
-  .check{width:30px;height:30px;border:2px solid var(--line);border-radius:9px;flex-shrink:0;position:relative;margin-top:2px;background:var(--surface);}
+  .logsum{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;}
+  .logsum span{font-size:11.5px;background:var(--line-2);border-radius:6px;padding:2px 7px;color:var(--ink);}
+  .check{width:28px;height:28px;border:2px solid var(--line);border-radius:9px;flex-shrink:0;position:relative;margin-top:2px;background:var(--surface);}
   .day.checked .check{background:var(--good);border-color:var(--good);}
-  .day.checked .check::after{content:"";position:absolute;left:9px;top:4px;width:7px;height:13px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg);}
-  .day.checked{opacity:.6;}
-  .day.checked .dtitle{text-decoration:line-through;text-decoration-color:var(--muted-2);}
+  .day.checked .check::after{content:"";position:absolute;left:8px;top:3px;width:7px;height:13px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg);}
+  .day.checked{opacity:.62;} .day.checked .dtitle{text-decoration:line-through;text-decoration-color:var(--muted-2);}
+  .logbtn{margin-top:8px;background:none;border:1px dashed var(--line);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;}
+  .logbtn:active{border-color:var(--brand);color:var(--brand);}
+  .logform{margin-top:9px;padding:11px;background:var(--line-2);border-radius:10px;display:none;}
+  .logform.open{display:block;}
+  .logform .lr{display:flex;gap:8px;margin-bottom:8px;align-items:center;}
+  .logform label{font-size:12.5px;width:74px;color:var(--muted);}
+  .logform input{flex:1;padding:8px 10px;}
+  .logform .save{background:var(--ink);color:var(--paper);border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;width:100%;}
 
-  /* ---------- CARDS / GRID ---------- */
+  /* CARDS */
   .grid2{display:grid;grid-template-columns:1fr;gap:16px;}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
   .card h3{margin:0 0 3px;font-size:16px;font-weight:700;}
-  .card .sub{color:var(--muted);font-size:13px;margin:0 0 14px;}
+  .card .sub{color:var(--muted);font-size:12.5px;margin:0 0 14px;}
 
-  /* ---------- TIMELINE ---------- */
+  /* TIMELINE */
   .toggle-row{display:flex;background:var(--line-2);border-radius:11px;padding:3px;margin-bottom:14px;}
   .toggle-row button{flex:1;border:none;background:none;font-size:13.5px;padding:9px 8px;border-radius:8px;cursor:pointer;color:var(--muted);}
   .toggle-row button.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08);}
   .timeline{list-style:none;margin:0;padding:0;}
-  .timeline li{display:grid;grid-template-columns:74px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line-2);}
+  .timeline li{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:9px 0;border-top:1px solid var(--line-2);}
   .timeline li:first-child{border-top:none;}
-  .timeline .t{font-family:"Barlow Condensed";font-weight:600;font-size:17px;color:var(--brand);line-height:1.25;}
-  .timeline .act{font-size:14px;}
-  .timeline .act b{font-weight:600;}
+  .timeline .t{font-family:"Barlow Condensed";font-weight:600;font-size:16px;color:var(--brand);line-height:1.3;}
+  .timeline .act{font-size:14px;} .timeline .act b{font-weight:600;}
   .timeline .act small{display:block;color:var(--muted);font-size:12.5px;}
-  .timeline li.sleep .t{color:var(--strength);}
-  .timeline li.train .t{color:var(--speed);}
+  .timeline li.sleep .t{color:var(--strength);} .timeline li.train .t{color:var(--speed);}
 
-  /* ---------- TIP LIST ---------- */
   .tiplist{list-style:none;margin:0;padding:0;}
-  .tiplist li{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line-2);font-size:14px;}
+  .tiplist li{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line-2);font-size:13.5px;}
   .tiplist li:first-child{border-top:none;}
   .tiplist .ic{color:var(--good);font-weight:700;flex-shrink:0;}
 
-  /* ---------- WEIGHT ---------- */
+  /* WEIGHT */
   .wt-input{display:flex;gap:8px;margin-bottom:14px;}
-  .wt-input input[type=date]{flex:1;min-width:0;}
-  .wt-input input[type=number]{width:90px;}
-  .wt-input button{background:var(--ink);color:#fff;border:none;border-radius:10px;padding:0 18px;font-size:15px;font-weight:600;cursor:pointer;}
-  .wt-input button:active{background:#000;}
-  .wt-chart{width:100%;height:140px;display:block;margin-bottom:12px;}
-  .wt-empty{color:var(--muted-2);font-size:14px;text-align:center;padding:26px 0;}
-  .wt-log{list-style:none;margin:0;padding:0;max-height:180px;overflow-y:auto;}
-  .wt-log li{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line-2);font-size:14px;}
-  .wt-log .d{color:var(--muted);}
-  .wt-log .kg{font-family:"Barlow Condensed";font-weight:600;font-size:18px;}
+  .wt-input input[type=date]{flex:1;min-width:0;} .wt-input input[type=number]{width:84px;}
+  .wt-input button{background:var(--ink);color:var(--paper);border:none;border-radius:10px;padding:0 16px;font-size:15px;font-weight:600;cursor:pointer;}
+  .chart{width:100%;height:140px;display:block;margin-bottom:12px;}
+  .empty{color:var(--muted-2);font-size:13.5px;text-align:center;padding:22px 0;}
+  .wt-log{list-style:none;margin:0;padding:0;max-height:170px;overflow-y:auto;}
+  .wt-log li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line-2);font-size:14px;}
+  .wt-log .d{color:var(--muted);} .wt-log .kg{font-family:"Barlow Condensed";font-weight:600;font-size:18px;}
   .wt-log .del{background:none;border:none;color:var(--muted-2);cursor:pointer;font-size:18px;padding:4px 8px;}
-  .wt-log .del:active{color:var(--speed);}
   .wt-summary{display:flex;gap:20px;margin-bottom:14px;}
-  .wt-summary .b .n{font-family:"Barlow Condensed";font-weight:700;font-size:26px;}
-  .wt-summary .b .l{font-size:12px;color:var(--muted);}
-  .wt-summary .down{color:var(--good);}
-  .wt-summary .up{color:var(--speed);}
+  .wt-summary .b .n{font-family:"Barlow Condensed";font-weight:700;font-size:25px;} .wt-summary .b .l{font-size:11.5px;color:var(--muted);}
+  .down{color:var(--good);} .up{color:var(--speed);}
 
-  /* ---------- PACE CALC ---------- */
-  .calc-row{display:flex;gap:10px;align-items:center;margin-bottom:12px;}
-  .calc-row label{font-size:14px;flex:1;}
-  .calc-row input{width:130px;text-align:center;}
+  /* PACE CALC + CALORIE */
+  .calc-row{display:flex;gap:10px;align-items:center;margin-bottom:11px;}
+  .calc-row label{font-size:13.5px;flex:1;} .calc-row input,.calc-row select{width:130px;}
   .calc-out{background:#0F1218;color:#EDEFF4;border-radius:12px;padding:16px;}
-  .calc-out .big{font-family:"Barlow Condensed";font-weight:700;font-size:38px;color:#6FE3C6;line-height:1;}
-  .calc-out .lbl{font-size:12.5px;color:#8C95A5;}
+  .calc-out .big{font-family:"Barlow Condensed";font-weight:700;font-size:36px;color:#6FE3C6;line-height:1;}
+  .calc-out .lbl{font-size:12px;color:#8C95A5;}
   .calc-splits{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#242C3A;border-radius:8px;overflow:hidden;margin-top:12px;}
   .calc-splits div{background:#12161E;padding:9px;text-align:center;}
-  .calc-splits .sv{font-family:"Barlow Condensed";font-weight:600;font-size:19px;color:#EDEFF4;}
-  .calc-splits .sl{font-size:10.5px;color:#8C95A5;}
+  .calc-splits .sv{font-family:"Barlow Condensed";font-weight:600;font-size:18px;color:#EDEFF4;} .calc-splits .sl{font-size:10px;color:#8C95A5;}
+  .cal-out{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px;}
+  .cal-box{background:var(--line-2);border-radius:10px;padding:12px;text-align:center;}
+  .cal-box .n{font-family:"Barlow Condensed";font-weight:700;font-size:24px;line-height:1;}
+  .cal-box .l{font-size:11px;color:var(--muted);margin-top:3px;}
+  .cal-box.hl{background:var(--good);color:#fff;} .cal-box.hl .l{color:#eafff5;}
 
-  /* ---------- ZONE TABLE ---------- */
+  /* TABLE */
   .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .ztable{width:100%;border-collapse:collapse;font-size:13.5px;min-width:440px;}
-  .ztable th,.ztable td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line-2);white-space:nowrap;}
+  .ztable th,.ztable td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line-2);white-space:nowrap;color:var(--ink);}
   .ztable th{font-size:12px;color:var(--muted);font-weight:600;}
-  .ztable .zc{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle;}
-  .ztable .zp{font-family:"Barlow Condensed";font-weight:600;font-size:15px;}
+  .zc{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle;}
+  .zp{font-family:"Barlow Condensed";font-weight:600;font-size:15px;}
 
-  /* ---------- NUTRITION ---------- */
+  /* NUTRITION */
   .nutgrid{display:grid;grid-template-columns:1fr;gap:12px;}
-  .nut{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow);}
-  .nut h4{margin:0 0 3px;font-size:15px;}
-  .nut p{margin:0;color:var(--muted);font-size:13.5px;}
+  .nut{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);}
+  .nut h4{margin:0 0 3px;font-size:14.5px;} .nut p{margin:0;color:var(--muted);font-size:13px;}
 
-  footer{color:var(--muted);padding:24px 0 8px;font-size:12.5px;text-align:center;}
-  footer b{color:var(--ink);}
+  /* SETTINGS */
+  .set-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line-2);}
+  .set-row:first-child{border-top:none;}
+  .set-row .info h4{margin:0 0 2px;font-size:14.5px;} .set-row .info p{margin:0;font-size:12.5px;color:var(--muted);}
+  .btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:9px 14px;font-size:13.5px;font-weight:600;cursor:pointer;}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand);}
+  .btn.danger{color:var(--speed);border-color:var(--speed);}
+  .sync-status{font-size:13px;display:flex;align-items:center;gap:7px;}
+  .dotstat{width:9px;height:9px;border-radius:50%;background:var(--muted-2);}
+  .dotstat.ok{background:var(--good);} .dotstat.warn{background:var(--tempo);} .dotstat.err{background:var(--speed);}
+  .note-box{background:var(--line-2);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.7;}
+  .note-box code{background:var(--surface);padding:1px 5px;border-radius:4px;font-size:11.5px;}
 
-  /* ---------- BOTTOM NAV ---------- */
-  .bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom);}
-  .bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 7px;color:var(--muted);text-decoration:none;font-size:11px;}
-  .bottomnav a .ico{font-size:20px;line-height:1;}
+  footer{color:var(--muted);padding:18px 0 8px;font-size:12px;text-align:center;} footer b{color:var(--ink);}
+
+  /* BOTTOM NAV */
+  .bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--nav-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom);}
+  .bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 6px;color:var(--muted);text-decoration:none;font-size:10.5px;}
+  .bottomnav a .ico{font-size:19px;line-height:1;}
   .bottomnav a.active{color:var(--brand);}
-  .bottomnav a.active .ico{transform:translateY(-1px);}
 
   @media(min-width:720px){
-    .grid2{grid-template-columns:1fr 1fr;}
-    .nutgrid{grid-template-columns:1fr 1fr;}
-    .hero{padding:34px 0 26px;}
-    section{padding:32px 0;}
+    .grid2,.nutgrid{grid-template-columns:1fr 1fr;}
+    section{padding:30px 0;}
   }
   @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
 </style>
 </head>
 <body>
 
-<!-- HERO -->
 <header class="hero">
   <div class="wrap">
-    <span class="kicker">แผน <b>12 สัปดาห์</b> · วิ่ง + เวท</span>
+    <div class="hero-top">
+      <span class="kicker">แผน <b>12 สัปดาห์</b> · วิ่ง + เวท</span>
+      <button class="themebtn" id="themeBtn" aria-label="สลับธีม">🌙</button>
+    </div>
     <h1 class="title">ลดไขมัน &amp; ทำเพซ 5:30</h1>
     <p class="subtitle">คนทำงาน 8:30–17:30 · ซ้อมหลัง 18:00 · 73 กก. / 177 ซม. · พักวันอาทิตย์</p>
     <div class="pace-transform">
@@ -244,9 +270,9 @@
       <div class="pace-note">ทดสอบ 5 กม.</div>
     </div>
     <div class="statgrid">
-      <div class="stat"><div class="n">12</div><div class="k">สัปดาห์</div></div>
-      <div class="stat"><div class="n">3</div><div class="k">วิ่ง/สัปดาห์</div></div>
-      <div class="stat"><div class="n">3</div><div class="k">เวท/สัปดาห์</div></div>
+      <div class="stat"><div class="n" id="stStreak">0</div><div class="k">🔥 วันต่อเนื่อง</div></div>
+      <div class="stat"><div class="n" id="stWeek">–</div><div class="k">สัปดาห์ปัจจุบัน</div></div>
+      <div class="stat"><div class="n" id="stKm">0</div><div class="k">วิ่งสะสม(กม.)</div></div>
       <div class="stat hi"><div class="n" id="heroDone">0<span class="small">/72</span></div><div class="k">ซ้อมสำเร็จ</div></div>
     </div>
   </div>
@@ -254,36 +280,23 @@
 
 <div class="wrap">
 
-  <!-- TODAY -->
   <section id="today">
     <div class="today-card">
-      <div class="today-head">
-        <span class="lbl">📍 วันนี้</span>
-        <span class="wk" id="todayWk"></span>
-      </div>
+      <div class="today-head"><span class="lbl">📍 วันนี้</span><span class="wk" id="todayWk"></span></div>
       <div id="todayContent"></div>
       <div class="today-info" id="todayInfo" style="display:none;"></div>
     </div>
   </section>
 
-  <!-- PROGRESS -->
   <section id="progress" style="padding-top:0;">
     <div class="progbar-wrap">
-      <div class="progbar-top">
-        <div><span class="pct num" id="pctText">0%</span></div>
-        <div class="cnt" id="cntText">ทำไป 0 จาก 72 การซ้อม</div>
-      </div>
+      <div class="progbar-top"><span class="pct num" id="pctText">0%</span><span class="cnt" id="cntText">ทำไป 0 จาก 72 การซ้อม</span></div>
       <div class="track"><span id="progFill"></span></div>
-      <button class="reset" id="resetBtn">↺ ล้างความคืบหน้า</button>
     </div>
   </section>
 
-  <!-- PLAN -->
   <section id="plan">
-    <div class="sec-head">
-      <h2>ตารางซ้อม</h2>
-      <p>แตะที่การ์ดของวันเพื่อทำเครื่องหมายว่าซ้อมเสร็จ</p>
-    </div>
+    <div class="sec-head"><h2>ตารางซ้อม</h2><p>แตะการ์ดของวันเพื่อเช็กว่าซ้อมเสร็จ · กด “บันทึกผล” เพื่อจดเพซจริง/โน้ต</p></div>
     <div class="phasebar">
       <span class="phase-pill">🟦 ด.1 สร้างฐาน</span>
       <span class="phase-pill">🟧 ด.2 เพิ่มความเร็ว</span>
@@ -293,16 +306,11 @@
     <div id="weekPanel"></div>
   </section>
 
-  <!-- ROUTINE -->
   <section id="routine">
-    <div class="sec-head">
-      <h2>กิจวัตร &amp; การนอน</h2>
-      <p>ออกแบบให้เข้ากับเวลางานและซ้อมช่วงเย็น</p>
-    </div>
+    <div class="sec-head"><h2>กิจวัตร &amp; การนอน</h2><p>ออกแบบให้เข้ากับเวลางานและซ้อมช่วงเย็น</p></div>
     <div class="grid2">
       <div class="card">
-        <h3>ตารางเวลาในหนึ่งวัน</h3>
-        <p class="sub">สลับดูวันซ้อมกับวันพักได้</p>
+        <h3>ตารางเวลาในหนึ่งวัน</h3><p class="sub">สลับดูวันซ้อมกับวันพัก</p>
         <div class="toggle-row" id="dayToggle">
           <button class="on" data-mode="train">วันซ้อม (จ.–ส.)</button>
           <button data-mode="rest">วันพัก (อา.)</button>
@@ -310,31 +318,50 @@
         <ul class="timeline" id="timeline"></ul>
       </div>
       <div class="card">
-        <h3>หลักการนอน</h3>
-        <p class="sub">เป้าหมาย 7.5–8 ชม./คืน เวลาเดิมทุกวัน</p>
+        <h3>หลักการนอน</h3><p class="sub">เป้าหมาย 7.5–8 ชม./คืน เวลาเดิมทุกวัน</p>
         <ul class="tiplist">
-          <li><span class="ic">✓</span><span><b>นอน 22:15 ตื่น 06:15</b> ได้ ~8 ชม. พอดีกับเวลาเข้างาน</span></li>
-          <li><span class="ic">✓</span><span>ซ้อมหนักจบก่อนนอน <b>2.5–3 ชม.</b> (จบ ~19:15 → นอน 22:15)</span></li>
-          <li><span class="ic">✓</span><span>มื้อเย็นเบา–กลาง กินเสร็จก่อนนอน ~2 ชม. เลี่ยงของทอดดึก</span></li>
+          <li><span class="ic">✓</span><span><b>นอน 22:15 ตื่น 06:15</b> ได้ ~8 ชม.</span></li>
+          <li><span class="ic">✓</span><span>ซ้อมหนักจบก่อนนอน <b>2.5–3 ชม.</b></span></li>
+          <li><span class="ic">✓</span><span>มื้อเย็นเบา–กลาง กินเสร็จก่อนนอน ~2 ชม.</span></li>
           <li><span class="ic">✓</span><span>งดคาเฟอีนหลัง <b>14:00 น.</b></span></li>
-          <li><span class="ic">✓</span><span>ก่อนนอน 45 นาที ลดแสงจอ ยืดเบาๆ หรืออ่านหนังสือ</span></li>
-          <li><span class="ic">✓</span><span>วันอาทิตย์อย่าคลาดเวลาปกติเกิน 1 ชม.</span></li>
+          <li><span class="ic">✓</span><span>ก่อนนอน 45 นาที ลดแสงจอ ยืดเบาๆ</span></li>
           <li><span class="ic">✓</span><span>คืนก่อน Long run และวันทดสอบ ให้ความสำคัญกับการนอนเป็นพิเศษ</span></li>
         </ul>
       </div>
     </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3>วอร์มอัพ · คูลดาวน์ · ยืดเหยียด</h3><p class="sub">ทำทุกครั้งเพื่อลดโอกาสบาดเจ็บ (เข่า/เอ็นร้อยหวายเป็นจุดที่นักวิ่งเจ็บบ่อย)</p>
+      <div class="grid2" style="gap:14px;">
+        <div>
+          <h4 style="margin:0 0 6px;font-size:14px;">🔥 วอร์มอัพ (5–10 นาที ก่อนวิ่ง)</h4>
+          <ul class="tiplist">
+            <li><span class="ic">1</span><span>เดินเร็ว/จ๊อกเบา 3–5 นาที</span></li>
+            <li><span class="ic">2</span><span>Leg swing หน้า-หลัง &amp; ข้าง ข้างละ 10 ครั้ง</span></li>
+            <li><span class="ic">3</span><span>High knees + Butt kicks 30 วิ</span></li>
+            <li><span class="ic">4</span><span>Lunge เดินหน้า 10 ก้าว + Ankle circle</span></li>
+            <li><span class="ic">5</span><span>Stride เร่งเบาๆ 4 × 20 ม. (เฉพาะวันสปีด/เทมโป)</span></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="margin:0 0 6px;font-size:14px;">🧊 คูลดาวน์ + ยืดค้าง (หลังวิ่ง)</h4>
+          <ul class="tiplist">
+            <li><span class="ic">•</span><span>เดินเบา 3–5 นาที ให้ชีพจรลง</span></li>
+            <li><span class="ic">•</span><span>ยืดน่อง (Calf) ค้าง 30 วิ/ข้าง</span></li>
+            <li><span class="ic">•</span><span>ยืดต้นขาหลัง (Hamstring) 30 วิ/ข้าง</span></li>
+            <li><span class="ic">•</span><span>ยืดสะโพก/Hip flexor 30 วิ/ข้าง</span></li>
+            <li><span class="ic">•</span><span>ยืดต้นขาหน้า (Quad) &amp; Glute 30 วิ/ข้าง</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- TOOLS -->
   <section id="tools">
-    <div class="sec-head">
-      <h2>เครื่องมือติดตามผล</h2>
-      <p>บันทึกน้ำหนัก และคำนวณเพซเป้าหมาย</p>
-    </div>
+    <div class="sec-head"><h2>เครื่องมือติดตามผล</h2><p>น้ำหนัก · เพซจริง · แคลอรี่/โปรตีน · คำนวณเพซ</p></div>
     <div class="grid2">
       <div class="card">
-        <h3>บันทึกน้ำหนัก</h3>
-        <p class="sub">ชั่งตอนเช้าหลังตื่น ก่อนอาหาร สัปดาห์ละ 1–2 ครั้ง</p>
+        <h3>บันทึกน้ำหนัก</h3><p class="sub">ชั่งตอนเช้าหลังตื่น ก่อนอาหาร สัปดาห์ละ 1–2 ครั้ง</p>
         <div class="wt-input">
           <input type="date" id="wtDate" />
           <input type="number" id="wtKg" placeholder="กก." step="0.1" min="30" max="200" inputmode="decimal" />
@@ -344,17 +371,44 @@
           <div class="b"><div class="n" id="wtCurrent">–</div><div class="l">ล่าสุด (กก.)</div></div>
           <div class="b"><div class="n" id="wtChange">–</div><div class="l">เปลี่ยนแปลงรวม</div></div>
         </div>
-        <svg class="wt-chart" id="wtChart" viewBox="0 0 400 140" preserveAspectRatio="none" style="display:none;"></svg>
-        <div class="wt-empty" id="wtEmpty">ยังไม่มีข้อมูล — เริ่มบันทึกน้ำหนักแรกได้เลย</div>
+        <svg class="chart" id="wtChart" viewBox="0 0 400 140" preserveAspectRatio="none" style="display:none;"></svg>
+        <div class="empty" id="wtEmpty">ยังไม่มีข้อมูล — เริ่มบันทึกน้ำหนักแรกได้เลย</div>
         <ul class="wt-log" id="wtLog"></ul>
       </div>
+
       <div class="card">
-        <h3>เครื่องคำนวณเพซ</h3>
-        <p class="sub">ใส่เพซ ดูเวลาที่ต้องทำในแต่ละระยะ</p>
-        <div class="calc-row">
-          <label for="calcPace">เพซ (นาที:วินาที /กม.)</label>
-          <input type="text" id="calcPace" value="5:30" inputmode="decimal" />
+        <h3>ความก้าวหน้าเพซจริง</h3><p class="sub">จดเพซจริงในแต่ละครั้งซ้อม (ปุ่ม “บันทึกผล” ในตาราง) แล้วดูแนวโน้มเข้าหา 5:30</p>
+        <svg class="chart" id="paceChart" viewBox="0 0 400 150" preserveAspectRatio="none" style="display:none;height:150px;"></svg>
+        <div class="empty" id="paceEmpty">ยังไม่มีเพซที่บันทึก — ลองจดผลวิ่งครั้งแรกดูครับ</div>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:16px;">
+      <div class="card">
+        <h3>แคลอรี่ &amp; โปรตีน (ลดไขมัน)</h3><p class="sub">คำนวณจากน้ำหนักล่าสุด/ที่กรอก · สูตร Mifflin-St Jeor</p>
+        <div class="calc-row"><label>เพศ</label>
+          <select id="calSex"><option value="m">ชาย</option><option value="f">หญิง</option></select></div>
+        <div class="calc-row"><label>อายุ (ปี)</label><input type="number" id="calAge" value="30" min="12" max="90" inputmode="numeric"></div>
+        <div class="calc-row"><label>ส่วนสูง (ซม.)</label><input type="number" id="calH" value="177" min="120" max="220" inputmode="numeric"></div>
+        <div class="calc-row"><label>น้ำหนัก (กก.)</label><input type="number" id="calW" value="73" step="0.1" min="30" max="200" inputmode="decimal"></div>
+        <div class="calc-row"><label>ระดับกิจกรรม</label>
+          <select id="calAct">
+            <option value="1.2">นั่งทำงานเป็นหลัก</option>
+            <option value="1.375">ออกกำลังเบา 1–3 วัน</option>
+            <option value="1.55" selected>ปานกลาง 3–5 วัน</option>
+            <option value="1.725">หนัก 6–7 วัน</option>
+          </select></div>
+        <div class="cal-out">
+          <div class="cal-box"><div class="n num" id="calMaint">–</div><div class="l">กินอยู่ตัว</div></div>
+          <div class="cal-box hl"><div class="n num" id="calCut">–</div><div class="l">ลดไขมัน</div></div>
+          <div class="cal-box"><div class="n num" id="calPro">–</div><div class="l">โปรตีน(ก.)</div></div>
         </div>
+      </div>
+
+      <div class="card">
+        <h3>เครื่องคำนวณเพซ</h3><p class="sub">ใส่เพซ ดูเวลาที่ต้องทำในแต่ละระยะ</p>
+        <div class="calc-row"><label for="calcPace">เพซ (นาที:วินาที /กม.)</label>
+          <input type="text" id="calcPace" value="5:30" inputmode="decimal"></div>
         <div class="calc-out">
           <div class="lbl">เวลา 5 กม. โดยประมาณ</div>
           <div class="big num" id="calc5k">27:30</div>
@@ -364,15 +418,12 @@
             <div><div class="sv num" id="calc10k">55:00</div><div class="sl">10 กม.</div></div>
           </div>
         </div>
-        <p class="sub" style="margin:12px 0 0;">💡 เพซ 5:30 = วิ่ง 5 กม. จบใน 27:30 เร็วขึ้นจากตอนนี้ (~40 นาที) ราว 12–13 นาที</p>
+        <p class="sub" style="margin:12px 0 0;">💡 เพซ 5:30 = วิ่ง 5 กม. จบใน 27:30</p>
       </div>
     </div>
-  </section>
 
-  <!-- ZONES -->
-  <section id="zones">
-    <div class="sec-head"><h2>โซนความเร็ว</h2><p>รู้ว่าแต่ละวันควรวิ่งเร็วแค่ไหน</p></div>
-    <div class="card">
+    <div class="card" style="margin-top:16px;">
+      <div class="sec-head" style="margin-bottom:10px;"><h2 style="font-size:16px;">โซนความเร็ว</h2></div>
       <div class="table-scroll">
         <table class="ztable">
           <thead><tr><th>ประเภท</th><th>ความรู้สึก</th><th>เพซ</th><th>ใช้ตอนไหน</th></tr></thead>
@@ -387,323 +438,441 @@
     </div>
   </section>
 
-  <!-- NUTRITION -->
-  <section id="nutrition">
-    <div class="sec-head"><h2>เคล็ดลับลดไขมัน</h2><p>อาหาร ~70% · ออกกำลังกาย ~30%</p></div>
-    <div class="nutgrid">
-      <div class="nut"><h4>🍚 พลังงานขาดเล็กน้อย</h4><p>กินน้อยกว่าที่ใช้ ~300–500 แคล/วัน ลด ~0.5 กก./สัปดาห์ เพื่อไม่เสียกล้ามและแรงวิ่ง</p></div>
-      <div class="nut"><h4>🍗 โปรตีนให้พอ</h4><p>~1.6–2.0 ก./น้ำหนัก 1 กก. (~115–145 ก./วัน) กระจายทุกมื้อ อิ่มนาน รักษากล้าม</p></div>
-      <div class="nut"><h4>🥦 คาร์บเชิงซ้อน + ผัก</h4><p>ข้าวกล้อง/ข้าวโอ๊ต/มันเทศ เติมคาร์บมากขึ้นในวัน Interval &amp; Long run</p></div>
-      <div class="nut"><h4>💧 น้ำ &amp; ก่อนซ้อม</h4><p>ดื่มน้ำทั้งวัน กินของว่างเบา (กล้วย) ก่อนซ้อม 30–45 นาที ให้มีแรงตอนเย็น</p></div>
-      <div class="nut"><h4>🔁 ฟื้นตัวหลังซ้อม</h4><p>ภายใน 1–2 ชม. หลังซ้อม กินโปรตีน + คาร์บ ช่วยซ่อมกล้าม</p></div>
-      <div class="nut"><h4>⚠️ ฟังร่างกาย</h4><p>เจ็บผิดปกติหรือล้าสะสม ให้ลดความเข้มข้นหรือพักเพิ่ม อย่าฝืน</p></div>
+  <section id="settings">
+    <div class="sec-head"><h2>ตั้งค่า &amp; ข้อมูล</h2><p>ซิงก์ข้ามอุปกรณ์ · สำรองข้อมูล · ติดตั้งแอป</p></div>
+    <div class="card">
+      <div class="set-row">
+        <div class="info"><h4>☁️ ซิงก์กับ Firebase</h4><p id="syncSub">ล็อกอินเพื่อเก็บข้อมูลบนคลาวด์และซิงก์ทุกเครื่อง</p></div>
+        <div>
+          <button class="btn primary" id="loginBtn">ล็อกอิน Google</button>
+          <button class="btn" id="logoutBtn" style="display:none;">ออกจากระบบ</button>
+        </div>
+      </div>
+      <div class="set-row"><div class="sync-status"><span class="dotstat" id="syncDot"></span><span id="syncText">กำลังเชื่อมต่อ…</span></div></div>
+      <div class="set-row">
+        <div class="info"><h4>💾 สำรองข้อมูล</h4><p>ดาวน์โหลดไฟล์ .json เก็บไว้ กันข้อมูลหาย</p></div>
+        <button class="btn" id="exportBtn">ส่งออก</button>
+      </div>
+      <div class="set-row">
+        <div class="info"><h4>📥 กู้คืนข้อมูล</h4><p>โหลดไฟล์ .json ที่เคยสำรองไว้กลับมา</p></div>
+        <button class="btn" id="importBtn">นำเข้า</button>
+        <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
+      </div>
+      <div class="set-row" id="installRow" style="display:none;">
+        <div class="info"><h4>📲 ติดตั้งเป็นแอป</h4><p>เพิ่มลงหน้าจอโฮม เปิดเต็มจอ ใช้ออฟไลน์ได้</p></div>
+        <button class="btn primary" id="installBtn">ติดตั้ง</button>
+      </div>
+      <div class="set-row">
+        <div class="info"><h4>🌓 ธีม</h4><p>สลับสว่าง/มืด (ค่าเริ่มต้นตามระบบ)</p></div>
+        <button class="btn" id="themeBtn2">สลับธีม</button>
+      </div>
+      <div class="set-row">
+        <div class="info"><h4>↺ ล้างความคืบหน้า</h4><p>ลบเครื่องหมายซ้อมทั้งหมด (น้ำหนัก/เพซยังอยู่)</p></div>
+        <button class="btn danger" id="resetBtn">ล้าง</button>
+      </div>
     </div>
   </section>
 
-  <footer>
-    แผนนี้เป็นแนวทางทั่วไป ไม่ใช่คำแนะนำทางการแพทย์<br>
-    <b>สู้ๆ ครับ — วิ่งให้สนุก แล้วเพซจะตามมาเอง 🏃</b>
-  </footer>
+  <section id="nutrition" style="padding-top:0;">
+    <div class="sec-head"><h2>เคล็ดลับลดไขมัน</h2><p>อาหาร ~70% · ออกกำลังกาย ~30%</p></div>
+    <div class="nutgrid">
+      <div class="nut"><h4>🍚 พลังงานขาดเล็กน้อย</h4><p>กินน้อยกว่าที่ใช้ ~300–500 แคล/วัน ลด ~0.5 กก./สัปดาห์</p></div>
+      <div class="nut"><h4>🍗 โปรตีนให้พอ</h4><p>~1.6–2.0 ก./น้ำหนัก 1 กก. กระจายทุกมื้อ อิ่มนาน รักษากล้าม</p></div>
+      <div class="nut"><h4>🥦 คาร์บเชิงซ้อน + ผัก</h4><p>ข้าวกล้อง/ข้าวโอ๊ต/มันเทศ เติมมากขึ้นวัน Interval &amp; Long run</p></div>
+      <div class="nut"><h4>💧 น้ำ &amp; ก่อนซ้อม</h4><p>ดื่มน้ำทั้งวัน กินของว่างเบา (กล้วย) ก่อนซ้อม 30–45 นาที</p></div>
+      <div class="nut"><h4>🔁 ฟื้นตัวหลังซ้อม</h4><p>ภายใน 1–2 ชม. กินโปรตีน + คาร์บ ช่วยซ่อมกล้าม</p></div>
+      <div class="nut"><h4>⚠️ ฟังร่างกาย</h4><p>เจ็บผิดปกติหรือล้าสะสม ให้ลดความเข้มข้นหรือพักเพิ่ม</p></div>
+    </div>
+  </section>
+
+  <footer>แผนนี้เป็นแนวทางทั่วไป ไม่ใช่คำแนะนำทางการแพทย์<br><b>สู้ๆ ครับ — วิ่งให้สนุก แล้วเพซจะตามมาเอง 🏃</b></footer>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottomnav" id="bottomnav">
   <a href="#today" data-t="today"><span class="ico">🎯</span>วันนี้</a>
   <a href="#plan" data-t="plan"><span class="ico">🗓️</span>ตาราง</a>
   <a href="#routine" data-t="routine"><span class="ico">😴</span>กิจวัตร</a>
   <a href="#tools" data-t="tools"><span class="ico">📊</span>เครื่องมือ</a>
+  <a href="#settings" data-t="settings"><span class="ico">⚙️</span>ตั้งค่า</a>
 </nav>
 
 <script>
-/* ===== DATA ===== */
+/* ================= Firebase config ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyDIfB_ZNTh0MRv6jYiyxeMSEfe04kdnivc",
+  authDomain: "methyl-pulse.firebaseapp.com",
+  projectId: "methyl-pulse",
+  storageBucket: "methyl-pulse.firebasestorage.app",
+  messagingSenderId: "235353989441",
+  appId: "1:235353989441:web:9570defee0b074341881c0"
+};
+
+/* ================= PLAN DATA ================= */
 const WEIGHT={
   mon:{type:"strength",title:"เวท: ช่วงบน (Upper)",det:"3 เซ็ต × 10–12 · <span class='hl'>Bench/Push-up, Row, Shoulder press, Biceps+Triceps</span> พัก 60–90 วิ"},
-  wed:{type:"strength",title:"เวท: ช่วงล่าง (Lower)",det:"3 เซ็ต × 10–12 · <span class='hl'>Squat, Lunge, Romanian deadlift, Calf raise</span> — ขาแข็งแรง = วิ่งเร็วขึ้น"},
+  wed:{type:"strength",title:"เวท: ช่วงล่าง (Lower)",det:"3 เซ็ต × 10–12 · <span class='hl'>Squat, Lunge, Romanian deadlift, Calf raise</span>"},
   fri:{type:"strength",title:"เวท: ทั้งตัว + คอร์",det:"3 เซ็ต · <span class='hl'>Deadlift/Goblet squat, Plank 3×45วิ, Russian twist, Mountain climber</span>"}
 };
 const WEIGHT_LIGHT={
-  mon:{type:"strength",title:"เวท: ช่วงบน (เบา)",det:"2 เซ็ต × 12 น้ำหนักเบาลง — สัปดาห์ฟื้นตัว เน้นฟอร์ม"},
-  wed:{type:"strength",title:"เวท: ช่วงล่าง (เบา)",det:"2 เซ็ต × 12 โฟกัสการเคลื่อนไหว ไม่ต้องหนัก"},
-  fri:{type:"strength",title:"คอร์ + ยืดเหยียด",det:"Plank, Bird-dog, Glute bridge + ยืดกล้ามเนื้อ 10 นาที"}
+  mon:{type:"strength",title:"เวท: ช่วงบน (เบา)",det:"2 เซ็ต × 12 น้ำหนักเบาลง — สัปดาห์ฟื้นตัว"},
+  wed:{type:"strength",title:"เวท: ช่วงล่าง (เบา)",det:"2 เซ็ต × 12 โฟกัสการเคลื่อนไหว"},
+  fri:{type:"strength",title:"คอร์ + ยืดเหยียด",det:"Plank, Bird-dog, Glute bridge + ยืด 10 นาที"}
 };
+const R=(t,title,det,km=0)=>({type:t,title,det,km});
 function wk(n,phase,pc,focus,tue,thu,sat,light){
   const W=light?WEIGHT_LIGHT:WEIGHT;
   return {n,phase,phaseColor:pc,focus,days:[
-    {d:"จ",dk:"mon",...W.mon},{d:"อ",dk:"tue",...tue},{d:"พ",dk:"wed",...W.wed},
-    {d:"พฤ",dk:"thu",...thu},{d:"ศ",dk:"fri",...W.fri},{d:"ส",dk:"sat",...sat},
-    {d:"อา",dk:"sun",type:"rest",title:"พักเต็มวัน",det:"พักผ่อน / meal prep / เดินเบาๆ ยืดเหยียดได้ตามสบาย"}
+    {d:"จ",dk:"mon",...W.mon,km:0},{d:"อ",dk:"tue",...tue},{d:"พ",dk:"wed",...W.wed,km:0},
+    {d:"พฤ",dk:"thu",...thu},{d:"ศ",dk:"fri",...W.fri,km:0},{d:"ส",dk:"sat",...sat},
+    {d:"อา",dk:"sun",type:"rest",title:"พักเต็มวัน",det:"พักผ่อน / meal prep / เดินเบาๆ",km:0}
   ]};
 }
-const R=(t,title,det)=>({type:t,title,det});
 const PLAN=[
   wk(1,"ด.1 สร้างฐาน","var(--brand)","ปรับตัว สร้างฐานความอึดและความแข็งแรง",
-    R("speed","Interval: 6 × 400 ม.","เร็ว <span class='hl'>เพซ 6:30</span> สลับเดินพัก 90 วิ · วอร์มอัพ 10 นาที"),
-    R("endure","Easy run 3 กม.","<span class='hl'>เพซ 8:00</span> สบายๆ คุยได้ ไม่หอบ"),
-    R("endure","Long run 5 กม.","<span class='hl'>เพซ 7:45</span> ช้าและต่อเนื่อง")),
+    R("speed","Interval: 6 × 400 ม.","เร็ว <span class='hl'>เพซ 6:30</span> สลับเดินพัก 90 วิ · วอร์มอัพ 10 นาที",5),
+    R("endure","Easy run 3 กม.","<span class='hl'>เพซ 8:00</span> สบายๆ คุยได้ ไม่หอบ",3),
+    R("endure","Long run 5 กม.","<span class='hl'>เพซ 7:45</span> ช้าและต่อเนื่อง",5)),
   wk(2,"ด.1 สร้างฐาน","var(--brand)","เพิ่มปริมาณทีละน้อย",
-    R("speed","Interval: 8 × 400 ม.","<span class='hl'>เพซ 6:20</span> · พัก 90 วิ"),
-    R("endure","Easy run 4 กม.","<span class='hl'>เพซ 7:45</span>"),
-    R("endure","Long run 6 กม.","<span class='hl'>เพซ 7:30</span>")),
+    R("speed","Interval: 8 × 400 ม.","<span class='hl'>เพซ 6:20</span> · พัก 90 วิ",6),
+    R("endure","Easy run 4 กม.","<span class='hl'>เพซ 7:45</span>",4),
+    R("endure","Long run 6 กม.","<span class='hl'>เพซ 7:30</span>",6)),
   wk(3,"ด.1 สร้างฐาน","var(--brand)","เริ่มมี Tempo ยกระดับความทน",
-    R("speed","Interval: 5 × 800 ม.","<span class='hl'>เพซ 6:15</span> · พัก 2 นาที"),
-    R("tempo","Tempo run 3 กม.","<span class='hl'>เพซ 7:00</span> ต่อเนื่อง เหนื่อยแต่คุมได้"),
-    R("endure","Long run 7 กม.","<span class='hl'>เพซ 7:30</span>")),
+    R("speed","Interval: 5 × 800 ม.","<span class='hl'>เพซ 6:15</span> · พัก 2 นาที",5),
+    R("tempo","Tempo run 3 กม.","<span class='hl'>เพซ 7:00</span> ต่อเนื่อง เหนื่อยแต่คุมได้",3),
+    R("endure","Long run 7 กม.","<span class='hl'>เพซ 7:30</span>",7)),
   wk(4,"ด.1 สร้างฐาน","var(--brand)","สัปดาห์ฟื้นตัว — ลดปริมาณให้ร่างกายซ่อมแซม",
-    R("speed","Interval: 6 × 400 ม.","<span class='hl'>เพซ 6:00</span> · พัก 90 วิ (เบากว่าปกติ)"),
-    R("endure","Easy run 4 กม.","<span class='hl'>เพซ 7:30</span>"),
-    R("endure","Long run 5 กม.","<span class='hl'>เพซ 7:15</span> สบายๆ"),true),
+    R("speed","Interval: 6 × 400 ม.","<span class='hl'>เพซ 6:00</span> · พัก 90 วิ (เบากว่าปกติ)",4),
+    R("endure","Easy run 4 กม.","<span class='hl'>เพซ 7:30</span>",4),
+    R("endure","Long run 5 กม.","<span class='hl'>เพซ 7:15</span> สบายๆ",5),true),
   wk(5,"ด.2 เพิ่มความเร็ว","var(--tempo)","ยกระดับ threshold และความเร็วต่อเนื่อง",
-    R("speed","Interval: 6 × 800 ม.","<span class='hl'>เพซ 6:00</span> · พัก 2 นาที"),
-    R("tempo","Tempo run 4 กม.","<span class='hl'>เพซ 6:45</span>"),
-    R("endure","Long run 8 กม.","<span class='hl'>เพซ 7:15</span>")),
+    R("speed","Interval: 6 × 800 ม.","<span class='hl'>เพซ 6:00</span> · พัก 2 นาที",6),
+    R("tempo","Tempo run 4 กม.","<span class='hl'>เพซ 6:45</span>",4),
+    R("endure","Long run 8 กม.","<span class='hl'>เพซ 7:15</span>",8)),
   wk(6,"ด.2 เพิ่มความเร็ว","var(--tempo)","แตะระยะ 1 กม. ที่ความเร็วสูง",
-    R("speed","Interval: 5 × 1 กม.","<span class='hl'>เพซ 5:45</span> · พัก 2 นาที"),
-    R("tempo","Tempo run 5 กม.","<span class='hl'>เพซ 6:30</span>"),
-    R("endure","Long run 8 กม.","<span class='hl'>เพซ 7:00</span>")),
+    R("speed","Interval: 5 × 1 กม.","<span class='hl'>เพซ 5:45</span> · พัก 2 นาที",6),
+    R("tempo","Tempo run 5 กม.","<span class='hl'>เพซ 6:30</span>",5),
+    R("endure","Long run 8 กม.","<span class='hl'>เพซ 7:00</span>",8)),
   wk(7,"ด.2 เพิ่มความเร็ว","var(--tempo)","ซ้อมที่เพซใกล้เป้าหมายครั้งแรก",
-    R("speed","Interval: 4 × 1 กม.","<span class='hl'>เพซ 5:30</span> (เพซเป้าหมาย!) · พัก 2 นาที"),
-    R("tempo","Tempo run 5 กม.","<span class='hl'>เพซ 6:15</span>"),
-    R("endure","Long run 9 กม.","<span class='hl'>เพซ 6:45</span>")),
+    R("speed","Interval: 4 × 1 กม.","<span class='hl'>เพซ 5:30</span> (เพซเป้าหมาย!) · พัก 2 นาที",5),
+    R("tempo","Tempo run 5 กม.","<span class='hl'>เพซ 6:15</span>",5),
+    R("endure","Long run 9 กม.","<span class='hl'>เพซ 6:45</span>",9)),
   wk(8,"ด.2 เพิ่มความเร็ว","var(--tempo)","สัปดาห์ฟื้นตัว — เก็บแรงก่อนเดือนสุดท้าย",
-    R("speed","Interval: 5 × 600 ม.","<span class='hl'>เพซ 5:45</span> · พัก 90 วิ (เบาลง)"),
-    R("endure","Easy run 5 กม.","<span class='hl'>เพซ 7:00</span>"),
-    R("endure","Long run 7 กม.","<span class='hl'>เพซ 6:45</span>"),true),
+    R("speed","Interval: 5 × 600 ม.","<span class='hl'>เพซ 5:45</span> · พัก 90 วิ (เบาลง)",4),
+    R("endure","Easy run 5 กม.","<span class='hl'>เพซ 7:00</span>",5),
+    R("endure","Long run 7 กม.","<span class='hl'>เพซ 6:45</span>",7),true),
   wk(9,"ด.3 เพซแข่ง & พีค","var(--endure)","ตรึงเพซเป้าหมายให้อยู่ตัว",
-    R("speed","Interval: 5 × 1 กม.","<span class='hl'>เพซ 5:30</span> · พัก 2 นาที"),
-    R("tempo","Tempo run 5 กม.","<span class='hl'>เพซ 6:00</span>"),
-    R("endure","Long run 9 กม.","<span class='hl'>เพซ 6:30</span>")),
+    R("speed","Interval: 5 × 1 กม.","<span class='hl'>เพซ 5:30</span> · พัก 2 นาที",6),
+    R("tempo","Tempo run 5 กม.","<span class='hl'>เพซ 6:00</span>",5),
+    R("endure","Long run 9 กม.","<span class='hl'>เพซ 6:30</span>",9)),
   wk(10,"ด.3 เพซแข่ง & พีค","var(--endure)","ปริมาณพีค — ทนเพซเร็วได้นานขึ้น",
-    R("speed","Interval: 6 × 1 กม.","<span class='hl'>เพซ 5:25</span> · พัก 2 นาที"),
-    R("tempo","Tempo run 6 กม.","<span class='hl'>เพซ 5:50</span>"),
-    R("endure","Long run 10 กม.","<span class='hl'>เพซ 6:15</span>")),
+    R("speed","Interval: 6 × 1 กม.","<span class='hl'>เพซ 5:25</span> · พัก 2 นาที",7),
+    R("tempo","Tempo run 6 กม.","<span class='hl'>เพซ 5:50</span>",6),
+    R("endure","Long run 10 กม.","<span class='hl'>เพซ 6:15</span>",10)),
   wk(11,"ด.3 เพซแข่ง & พีค","var(--endure)","ซ้อมเร็วกว่าเป้า เพื่อให้ 5:30 รู้สึกง่ายลง",
-    R("speed","Interval: 4 × 1.2 กม.","<span class='hl'>เพซ 5:20</span> · พัก 2.5 นาที"),
-    R("tempo","Tempo run 5 กม.","<span class='hl'>เพซ 5:40</span>"),
-    R("endure","Long run 8 กม.","<span class='hl'>เพซ 6:00</span>")),
+    R("speed","Interval: 4 × 1.2 กม.","<span class='hl'>เพซ 5:20</span> · พัก 2.5 นาที",6),
+    R("tempo","Tempo run 5 กม.","<span class='hl'>เพซ 5:40</span>",5),
+    R("endure","Long run 8 กม.","<span class='hl'>เพซ 6:00</span>",8)),
   wk(12,"ด.3 เพซแข่ง & พีค","var(--endure)","ลดปริมาณ (Taper) + ทดสอบจริง 🎯",
-    R("speed","Interval: 3 × 1 กม.","<span class='hl'>เพซ 5:15</span> · พัก 2.5 นาที — กระตุ้นขา ไม่ให้ล้า"),
-    R("endure","Easy run 4 กม.","<span class='hl'>เพซ 6:30</span> เก็บแรง"),
-    R("speed","🎯 ทดสอบ 5 กม. เต็ม","วิ่งให้เร็วที่สุด · <span class='hl'>เป้าหมายเพซ 5:30 (จบ 27:30)</span> — วอร์มอัพให้ดีแล้วลุย!"))
+    R("speed","Interval: 3 × 1 กม.","<span class='hl'>เพซ 5:15</span> · พัก 2.5 นาที",4),
+    R("endure","Easy run 4 กม.","<span class='hl'>เพซ 6:30</span> เก็บแรง",4),
+    R("speed","🎯 ทดสอบ 5 กม. เต็ม","วิ่งเร็วที่สุด · <span class='hl'>เป้าหมาย 5:30 (จบ 27:30)</span> — วอร์มอัพให้ดีแล้วลุย!",5))
 ];
 const TC={speed:"var(--speed)",tempo:"var(--tempo)",endure:"var(--endure)",strength:"var(--strength)",rest:"var(--rest)"};
-const TL_LBL={speed:"สปีด / Interval",tempo:"เทมโป",endure:"วิ่งอึด",strength:"เวทเทรนนิ่ง",rest:"พัก"};
+const TLBL={speed:"สปีด / Interval",tempo:"เทมโป",endure:"วิ่งอึด",strength:"เวทเทรนนิ่ง",rest:"พัก"};
 const DAYNAMES=["จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์","อาทิตย์"];
 const TOTAL=PLAN.reduce((a,w)=>a+w.days.filter(d=>d.type!=="rest").length,0);
+const isRun=t=>t!=="strength"&&t!=="rest";
 
-/* ===== STATE ===== */
-const LS_DONE="tp_done_v1",LS_START="tp_start_v1",LS_WT="tp_weight_v1";
-let done=load(LS_DONE,{}), weights=load(LS_WT,[]);
-let startDate=localStorage.getItem(LS_START)||"", activeWeek=1;
-function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch(e){return d;}}
-function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+/* ================= STATE ================= */
+const LS="tp_state_v2";
+let STATE=loadState(), activeWeek=1;
+function blank(){return {done:{},weights:[],logs:{},startDate:"",settings:{theme:"auto"},updatedAt:0};}
+function loadState(){
+  try{const s=JSON.parse(localStorage.getItem(LS)); if(s&&typeof s==="object") return normalize(s);}catch(e){}
+  // migrate from v1
+  try{
+    const d=JSON.parse(localStorage.getItem("tp_done_v1")||"null");
+    const w=JSON.parse(localStorage.getItem("tp_weight_v1")||"null");
+    const sd=localStorage.getItem("tp_start_v1")||"";
+    if(d||w||sd){const b=blank();b.done=d||{};b.weights=w||[];b.startDate=sd;b.updatedAt=Date.now();return b;}
+  }catch(e){}
+  return blank();
+}
+function normalize(s){const b=blank();return {
+  done:s.done||{},weights:Array.isArray(s.weights)?s.weights:[],logs:s.logs||{},
+  startDate:s.startDate||"",settings:Object.assign({theme:"auto"},s.settings||{}),updatedAt:s.updatedAt||0};}
+function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(STATE));}catch(e){}}
+function persist(){STATE.updatedAt=Date.now();saveLocal();cloudPush(false);}
 function fmtThai(d){return d.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});}
 
+/* ================= THEME ================= */
+function applyTheme(){
+  const t=STATE.settings.theme;
+  if(t==="auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme",t);
+  const dark = t==="dark" || (t==="auto" && matchMedia("(prefers-color-scheme:dark)").matches);
+  document.querySelector('meta[name=theme-color]').setAttribute("content", dark?"#0D1015":"#0F1218");
+  document.getElementById("themeBtn").textContent = dark?"☀️":"🌙";
+}
+function toggleTheme(){
+  const t=STATE.settings.theme;
+  STATE.settings.theme = t==="dark"?"light":(t==="light"?"auto":"dark");
+  applyTheme();persist();
+}
+document.getElementById("themeBtn").onclick=toggleTheme;
+document.getElementById("themeBtn2").onclick=toggleTheme;
+
+/* ================= DATE HELPERS ================= */
 function currentFromStart(){
-  if(!startDate) return null;
-  const s=new Date(startDate+"T00:00:00");
+  if(!STATE.startDate) return null;
+  const s=new Date(STATE.startDate+"T00:00:00");
   const diff=Math.floor((Date.now()-s.getTime())/86400000);
   if(diff<0) return {before:true,s};
   return {week:Math.min(Math.floor(diff/7)+1,12),dayIdx:diff%7,overDiff:diff,s};
 }
 function testInfo(){
-  if(!startDate) return null;
-  const s=new Date(startDate+"T00:00:00");
-  const testDate=new Date(s.getTime()+(11*7+5)*86400000);
-  return {testDate,days:Math.ceil((testDate-Date.now())/86400000)};
+  if(!STATE.startDate) return null;
+  const s=new Date(STATE.startDate+"T00:00:00");
+  const td=new Date(s.getTime()+(11*7+5)*86400000);
+  return {td,days:Math.ceil((td-Date.now())/86400000)};
+}
+function computeStreak(){
+  const cur=currentFromStart(); if(!cur||cur.before) return 0;
+  let streak=0;
+  for(let off=0;off<=cur.overDiff;off++){
+    const dayNum=cur.overDiff-off; if(dayNum>=84) continue;
+    const w=Math.floor(dayNum/7)+1, di=dayNum%7, day=PLAN[w-1].days[di];
+    const id=`w${w}-${day.dk}`, ok=day.type==="rest"||!!STATE.done[id];
+    if(off===0){ if(day.type!=="rest"&&!STATE.done[id]) continue; streak++; continue; }
+    if(ok) streak++; else break;
+  }
+  return streak;
+}
+function weekSummary(n){
+  const w=PLAN[n-1]; let s=0,tot=0,km=0;
+  w.days.forEach(d=>{if(d.type!=="rest"){tot++;const id=`w${w.n}-${d.dk}`;if(STATE.done[id]){s++;km+=d.km||0;}}});
+  return {s,tot,km};
+}
+function totalKm(){
+  let km=0; PLAN.forEach(w=>w.days.forEach(d=>{if(isRun(d.type)&&STATE.done[`w${w.n}-${d.dk}`]) km+=d.km||0;}));
+  return km;
 }
 
-/* ===== TODAY CARD ===== */
-const todayContent=document.getElementById("todayContent");
-const todayWk=document.getElementById("todayWk");
-const todayInfo=document.getElementById("todayInfo");
+/* ================= TODAY ================= */
+const todayContent=document.getElementById("todayContent"),todayWk=document.getElementById("todayWk"),todayInfo=document.getElementById("todayInfo");
 function renderToday(){
-  const cur=currentFromStart();
-  todayInfo.style.display="none"; todayWk.textContent="";
+  const cur=currentFromStart(); todayInfo.style.display="none"; todayWk.textContent="";
   if(!cur){
-    todayContent.innerHTML=`<div class="today-setup">
-      <p>ตั้งวันที่เริ่มแผน (วันจันทร์สัปดาห์ที่ 1) เพื่อให้แอปบอกว่าวันนี้ต้องซ้อมอะไร และนับถอยหลังวันทดสอบ</p>
-      <div class="row"><label for="startDate">📅 วันเริ่ม:</label><input type="date" id="startDate"></div>
-    </div>`;
-    hookStart(); return;
+    todayContent.innerHTML=`<div class="today-setup"><p>ตั้งวันที่เริ่มแผน (วันจันทร์สัปดาห์ที่ 1) เพื่อให้แอปบอกว่าวันนี้ต้องซ้อมอะไร และนับถอยหลังวันทดสอบ</p><div class="row"><label for="startDate">📅 วันเริ่ม:</label><input type="date" id="startDate"></div></div>`;
+    hookStart();return;
   }
   if(cur.before){
-    todayContent.innerHTML=`<div class="today-rest"><div class="em">⏳</div>
-      <p>แผนจะเริ่มวันที่ <b>${fmtThai(cur.s)}</b><br>พักผ่อนและเตรียมตัวให้พร้อมนะครับ</p></div>`;
-    showInfo(cur); return;
+    todayContent.innerHTML=`<div class="today-rest"><div class="em">⏳</div><p>แผนจะเริ่มวันที่ <b>${fmtThai(cur.s)}</b><br>พักผ่อนและเตรียมตัวให้พร้อมนะครับ</p></div>`;
+    showInfo(cur);return;
   }
   if(cur.overDiff>83){
-    todayContent.innerHTML=`<div class="today-rest"><div class="em">🎉</div>
-      <p>จบแผน 12 สัปดาห์แล้ว!<br>หวังว่าคุณทำเพซ <b>5:30</b> ได้นะครับ</p></div>`;
-    return;
+    todayContent.innerHTML=`<div class="today-rest"><div class="em">🎉</div><p>จบแผน 12 สัปดาห์แล้ว!<br>หวังว่าคุณทำเพซ <b>5:30</b> ได้นะครับ</p></div>`;return;
   }
-  const w=PLAN[cur.week-1], day=w.days[cur.dayIdx], id=`w${w.n}-${day.dk}`;
-  activeWeek=cur.week;
-  todayWk.textContent=`สัปดาห์ ${w.n} · ${DAYNAMES[cur.dayIdx]}`;
+  const w=PLAN[cur.week-1],day=w.days[cur.dayIdx],id=`w${w.n}-${day.dk}`;
+  activeWeek=cur.week; todayWk.textContent=`สัปดาห์ ${w.n} · ${DAYNAMES[cur.dayIdx]}`;
   if(day.type==="rest"){
-    todayContent.innerHTML=`<div class="today-rest"><div class="em">😴</div>
-      <p><b>วันพัก</b><br>ให้กล้ามเนื้อฟื้นตัว — พักคือส่วนหนึ่งของการซ้อม</p></div>`;
+    todayContent.innerHTML=`<div class="today-rest"><div class="em">😴</div><p><b>วันพัก</b><br>ให้กล้ามเนื้อฟื้นตัว — พักคือส่วนหนึ่งของการซ้อม</p></div>`;
   }else{
-    const isDone=!!done[id];
-    todayContent.innerHTML=`<div class="today-body">
-      <span class="badge" style="background:${TC[day.type]}">${TL_LBL[day.type]}</span>
-      <p class="tt">${day.title}</p>
-      <p class="td">${day.det}</p>
-      <button class="big-btn ${isDone?"done":"todo"}" id="todayBtn">
-        ${isDone?"✓ ซ้อมเสร็จแล้ววันนี้":"ทำเครื่องหมายว่าซ้อมเสร็จ"}</button>
-    </div>`;
-    document.getElementById("todayBtn").onclick=()=>{
-      if(done[id]) delete done[id]; else done[id]=true;
-      save(LS_DONE,done); renderAll();
-    };
+    const dn=!!STATE.done[id];
+    todayContent.innerHTML=`<div class="today-body"><span class="badge" style="background:${TC[day.type]}">${TLBL[day.type]}</span>
+      <p class="tt">${day.title}</p><p class="td">${day.det}</p>
+      <button class="big-btn ${dn?"done":"todo"}" id="todayBtn">${dn?"✓ ซ้อมเสร็จแล้ววันนี้":"ทำเครื่องหมายว่าซ้อมเสร็จ"}</button></div>`;
+    document.getElementById("todayBtn").onclick=()=>{if(STATE.done[id])delete STATE.done[id];else STATE.done[id]=true;persist();refresh();};
   }
   showInfo(cur);
 }
 function showInfo(cur){
-  const ti=testInfo();
-  todayInfo.style.display="flex";
-  const left=cur.before?`เริ่ม ${fmtThai(cur.s)}`:`สัปดาห์ที่ <b>${cur.week}</b> จาก 12`;
-  const right=ti&&ti.days>0?`เหลือ <b>${ti.days} วัน</b> ถึงทดสอบ 5K`:(ti?`ถึงวันทดสอบแล้ว!`:"");
-  todayInfo.innerHTML=`<span>${left}</span><span>${right}</span> <span class="chg" id="chgStart">เปลี่ยนวันเริ่ม</span>`;
-  document.getElementById("chgStart").onclick=()=>{
-    startDate=""; localStorage.removeItem(LS_START); renderAll();
-  };
+  const ti=testInfo(); todayInfo.style.display="flex";
+  const left=cur.before?`เริ่ม ${fmtThai(cur.s)}`:`<span class="chip">🔥 ${computeStreak()} วันต่อเนื่อง</span>`;
+  const right=ti&&ti.days>0?`เหลือ <b>${ti.days} วัน</b> ถึงทดสอบ`:(ti?`ถึงวันทดสอบแล้ว!`:"");
+  todayInfo.innerHTML=`<span>${left}</span><span>${right}</span><span class="chg" id="chgStart">เปลี่ยนวันเริ่ม</span>`;
+  document.getElementById("chgStart").onclick=()=>{STATE.startDate="";persist();refresh();};
 }
 function hookStart(){
-  const inp=document.getElementById("startDate");
-  if(!inp) return;
-  if(startDate) inp.value=startDate;
-  inp.addEventListener("change",()=>{startDate=inp.value;save(LS_START,startDate);renderAll();});
+  const inp=document.getElementById("startDate"); if(!inp)return;
+  if(STATE.startDate) inp.value=STATE.startDate;
+  inp.addEventListener("change",()=>{STATE.startDate=inp.value;persist();refresh();});
 }
 
-/* ===== WEEK NAV + PANEL ===== */
-const weekNav=document.getElementById("weekNav"), weekPanel=document.getElementById("weekPanel");
-function weekStatus(w){
-  const ids=w.days.filter(d=>d.type!=="rest").map(d=>`w${w.n}-${d.dk}`);
-  return {c:ids.filter(id=>done[id]).length,total:ids.length};
-}
+/* ================= WEEK NAV + PANEL ================= */
+const weekNav=document.getElementById("weekNav"),weekPanel=document.getElementById("weekPanel");
 function renderNav(){
-  const cur=currentFromStart();
-  weekNav.innerHTML="";
+  const cur=currentFromStart(); weekNav.innerHTML="";
   PLAN.forEach(w=>{
-    const {c,total}=weekStatus(w);
-    const cls=c===total?"done":(c>0?"partial":"");
-    const todayW=cur&&!cur.before&&cur.week===w.n?"today-week":"";
+    const {s,tot}=weekSummary(w.n);
+    const cls=s===tot?"done":(s>0?"partial":"");
+    const tw=cur&&!cur.before&&cur.week===w.n?"today-week":"";
     const b=document.createElement("button");
-    b.className=`wtab ${w.n===activeWeek?"active":""} ${cls} ${todayW}`;
+    b.className=`wtab ${w.n===activeWeek?"active":""} ${cls} ${tw}`;
     b.innerHTML=`<div class="wl">สัปดาห์</div><div class="wn num">${w.n}</div><span class="dot"></span>`;
     b.onclick=()=>{activeWeek=w.n;renderNav();renderPanel();b.scrollIntoView({inline:"center",block:"nearest"});};
     weekNav.appendChild(b);
   });
-  const act=weekNav.querySelector(".wtab.active");
-  if(act) act.scrollIntoView({inline:"center",block:"nearest"});
+  const act=weekNav.querySelector(".wtab.active"); if(act) act.scrollIntoView({inline:"center",block:"nearest"});
 }
 function renderPanel(){
-  const w=PLAN[activeWeek-1], {c,total}=weekStatus(w), cur=currentFromStart();
-  let h=`<div class="weekmeta">
-    <span class="phase" style="background:${w.phaseColor}">${w.phase}</span>
-    <span class="focus">${w.focus}</span>
-    <span class="wprog num">${c}/${total} เสร็จ</span></div><div class="days">`;
+  const w=PLAN[activeWeek-1],cur=currentFromStart(),{s,tot,km}=weekSummary(w.n);
+  let h=`<div class="weekmeta"><span class="phase" style="background:${w.phaseColor}">${w.phase}</span><span class="focus">${w.focus}</span></div>
+    <div class="weeksum"><span>สำเร็จ <b>${s}/${tot}</b></span><span>วิ่งสะสม <b>${km}</b> กม.</span></div><div class="days">`;
   w.days.forEach((d,i)=>{
-    const id=`w${w.n}-${d.dk}`, isRest=d.type==="rest";
-    const isToday=cur&&!cur.before&&cur.week===w.n&&cur.dayIdx===i?"today":"";
-    h+=`<div class="day ${isRest?"rest":"tappable"} ${done[id]?"checked":""} ${isToday}" style="border-left-color:${TC[d.type]}" ${isRest?"":`data-id="${id}" role="button" tabindex="0" aria-pressed="${!!done[id]}"`}>
-      <div class="dname"><span class="big num">${d.d}</span>${DAYNAMES[i]}</div>
-      <div class="mid">
-        ${isRest?"":`<span class="badge" style="background:${TC[d.type]}">${TL_LBL[d.type]}</span>`}
-        <p class="dtitle">${d.title}</p><p class="ddet">${d.det}</p>
+    const id=`w${w.n}-${d.dk}`,rest=d.type==="rest";
+    const today=cur&&!cur.before&&cur.week===w.n&&cur.dayIdx===i?"today":"";
+    const log=STATE.logs[id]||{};
+    let sum="";
+    if(log.pace) sum+=`<span>⏱ ${log.pace}</span>`;
+    if(log.note) sum+=`<span>📝 ${escapeHtml(log.note)}</span>`;
+    h+=`<div class="day ${rest?"rest":""} ${STATE.done[id]?"checked":""} ${today}" style="border-left-color:${TC[d.type]}">
+      <div class="tapzone" ${rest?"":`data-id="${id}" role="button" tabindex="0"`}>
+        <div class="dname"><span class="big num">${d.d}</span>${DAYNAMES[i]}</div>
+        <div class="mid">
+          ${rest?"":`<span class="badge" style="background:${TC[d.type]}">${TLBL[d.type]}</span>`}
+          <p class="dtitle">${d.title}</p><p class="ddet">${d.det}</p>
+          ${sum?`<div class="logsum">${sum}</div>`:""}
+        </div>
       </div>
-      ${isRest?"":`<div class="check"></div>`}
+      ${rest?"":`<div class="check"></div>`}
     </div>`;
+    if(!rest){
+      h+=`<div style="margin:-4px 0 0 0;">
+        <button class="logbtn" data-log="${id}">＋ บันทึกผล / โน้ต</button>
+        <div class="logform" id="lf-${id}">
+          ${isRun(d.type)?`<div class="lr"><label>เพซจริง</label><input type="text" id="lp-${id}" value="${log.pace||""}" placeholder="เช่น 6:15" inputmode="decimal"></div>`:""}
+          <div class="lr"><label>โน้ต</label><input type="text" id="ln-${id}" value="${log.note?escapeAttr(log.note):""}" placeholder="รู้สึกยังไง / อากาศ"></div>
+          <button class="save" data-save="${id}">บันทึก &amp; ทำเครื่องหมายเสร็จ</button>
+        </div></div>`;
+    }
   });
   weekPanel.innerHTML=h+"</div>";
-  weekPanel.querySelectorAll(".day.tappable").forEach(el=>{
-    const toggle=()=>{const id=el.dataset.id; if(done[id])delete done[id]; else done[id]=true; save(LS_DONE,done); renderAll();};
-    el.addEventListener("click",toggle);
-    el.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();toggle();}});
+  // tap to toggle done
+  weekPanel.querySelectorAll(".tapzone[data-id]").forEach(el=>{
+    const id=el.dataset.id;
+    const t=()=>{if(STATE.done[id])delete STATE.done[id];else STATE.done[id]=true;persist();refresh();};
+    el.addEventListener("click",t);
+    el.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();t();}});
   });
+  // open log form
+  weekPanel.querySelectorAll(".logbtn").forEach(b=>b.addEventListener("click",()=>{
+    document.getElementById("lf-"+b.dataset.log).classList.toggle("open");
+  }));
+  // save log
+  weekPanel.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",()=>{
+    const id=b.dataset.save,pEl=document.getElementById("lp-"+id),nEl=document.getElementById("ln-"+id);
+    const log={}; if(pEl&&pEl.value.trim())log.pace=pEl.value.trim(); if(nEl&&nEl.value.trim())log.note=nEl.value.trim();
+    if(Object.keys(log).length) STATE.logs[id]=log; else delete STATE.logs[id];
+    STATE.done[id]=true; persist(); refresh();
+  }));
 }
+function escapeHtml(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function escapeAttr(s){return String(s).replace(/"/g,"&quot;").replace(/</g,"&lt;");}
 
-/* ===== PROGRESS ===== */
+/* ================= PROGRESS + HERO STATS ================= */
 function renderProgress(){
-  const c=Object.values(done).filter(Boolean).length, pct=Math.round(c/TOTAL*100);
+  const c=Object.values(STATE.done).filter(Boolean).length,pct=Math.round(c/TOTAL*100);
   document.getElementById("progFill").style.width=pct+"%";
   document.getElementById("pctText").textContent=pct+"%";
   document.getElementById("cntText").textContent=`ทำไป ${c} จาก ${TOTAL} การซ้อม`;
   document.getElementById("heroDone").innerHTML=`${c}<span class="small">/${TOTAL}</span>`;
+  document.getElementById("stStreak").textContent=computeStreak();
+  const cur=currentFromStart();
+  document.getElementById("stWeek").textContent=(cur&&!cur.before&&cur.overDiff<=83)?cur.week:"–";
+  document.getElementById("stKm").textContent=totalKm();
 }
-document.getElementById("resetBtn").onclick=()=>{
-  if(confirm("ล้างเครื่องหมายซ้อมทั้งหมด? (ข้อมูลน้ำหนักและวันเริ่มยังอยู่)")){
-    done={};save(LS_DONE,done);renderAll();
-  }
-};
 
-/* ===== TIMELINE ===== */
+/* ================= TIMELINE ================= */
 const TLD={
   train:[["06:15","ตื่นนอน","ดื่มน้ำเปล่า 1 แก้วทันที"],["06:30","อาหารเช้าโปรตีนสูง","ไข่ / กรีกโยเกิร์ต / ข้าวโอ๊ต + ผลไม้"],
     ["08:30","เริ่มงาน","จิบน้ำสม่ำเสมอตลอดวัน"],["15:30","ของว่างบ่าย","ผลไม้ / ถั่ว — กันหิวโซตอนเย็น"],
-    ["17:30","เลิกงาน + snack","กล้วย 1 ลูก ก่อนซ้อม 30–45 นาที"],["18:00","วอร์มอัพ 10–15 นาที","เดินเร็ว วิ่งเบา + ท่ายืดแบบเคลื่อนไหว"],
+    ["17:30","เลิกงาน + snack","กล้วย 1 ลูก ก่อนซ้อม 30–45 นาที"],["18:00","วอร์มอัพ 10–15 นาที","เดินเร็ว วิ่งเบา + ยืดแบบเคลื่อนไหว"],
     ["18:15","ซ้อมหลัก + คูลดาวน์","วิ่งหรือเวทตามตาราง ~60 นาที",true],["19:30","อาบน้ำ",""],
-    ["19:45","มื้อเย็น","โปรตีน + คาร์บเชิงซ้อน + ผัก (มื้อเบา–กลาง)"],["20:15","พัก / เตรียมของพรุ่งนี้",""],
+    ["19:45","มื้อเย็น","โปรตีน + คาร์บเชิงซ้อน + ผัก (เบา–กลาง)"],["20:15","พัก / เตรียมของพรุ่งนี้",""],
     ["21:30","Wind-down","ลดแสงจอ ยืดเบาๆ อ่านหนังสือ"],["22:15","เข้านอน","นอน ~8 ชม.",false,"sleep"]],
-  rest:[["07:00","ตื่นตามธรรมชาติ","อย่าคลาดเวลาปกติเกิน 1 ชม."],["เช้า","Active recovery (ถ้าอยาก)","เดินเบา / ยืดเหยียด / โยคะ 20–30 นาที"],
+  rest:[["07:00","ตื่นตามธรรมชาติ","อย่าคลาดเวลาปกติเกิน 1 ชม."],["เช้า","Active recovery (ถ้าอยาก)","เดินเบา / ยืด / โยคะ 20–30 นาที"],
     ["สาย","Meal prep","เตรียมอาหารโปรตีนสูงสำหรับสัปดาห์"],["บ่าย","พักผ่อนเต็มที่","ให้กล้ามเนื้อฟื้นตัว"],
-    ["เย็น","เตรียมสัปดาห์ใหม่","จัดชุดซ้อม วางแผนมื้ออาหาร"],["22:15","เข้านอนเวลาปกติ","เริ่มสัปดาห์ใหม่ด้วยพลังเต็ม",false,"sleep"]]
+    ["เย็น","เตรียมสัปดาห์ใหม่","จัดชุดซ้อม วางแผนมื้ออาหาร"],["22:15","เข้านอนเวลาปกติ","เริ่มด้วยพลังเต็ม",false,"sleep"]]
 };
 const timeline=document.getElementById("timeline");
-function renderTimeline(m){
-  timeline.innerHTML=TLD[m].map(([t,a,s,tr,cls])=>
-    `<li class="${tr?"train":(cls||"")}"><div class="t num">${t}</div><div class="act"><b>${a}</b>${s?`<small>${s}</small>`:""}</div></li>`).join("");
-}
-document.querySelectorAll("#dayToggle button").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll("#dayToggle button").forEach(x=>x.classList.remove("on"));
-  b.classList.add("on");renderTimeline(b.dataset.mode);
-});
-renderTimeline("train");
+function renderTimeline(m){timeline.innerHTML=TLD[m].map(([t,a,s,tr,cls])=>`<li class="${tr?"train":(cls||"")}"><div class="t num">${t}</div><div class="act"><b>${a}</b>${s?`<small>${s}</small>`:""}</div></li>`).join("");}
+document.querySelectorAll("#dayToggle button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#dayToggle button").forEach(x=>x.classList.remove("on"));b.classList.add("on");renderTimeline(b.dataset.mode);});
 
-/* ===== WEIGHT ===== */
+/* ================= WEIGHT ================= */
 const wtDate=document.getElementById("wtDate"),wtKg=document.getElementById("wtKg");
-const wtLog=document.getElementById("wtLog"),wtEmpty=document.getElementById("wtEmpty");
-const wtChart=document.getElementById("wtChart"),wtSummary=document.getElementById("wtSummary");
+const wtLog=document.getElementById("wtLog"),wtEmpty=document.getElementById("wtEmpty"),wtChart=document.getElementById("wtChart"),wtSummary=document.getElementById("wtSummary");
 wtDate.value=new Date().toISOString().slice(0,10);
 document.getElementById("wtAdd").onclick=()=>{
   const d=wtDate.value,kg=parseFloat(wtKg.value);
   if(!d||!kg||kg<30||kg>200){alert("กรุณาใส่วันที่และน้ำหนักที่ถูกต้อง (30–200 กก.)");return;}
-  weights=weights.filter(w=>w.d!==d); weights.push({d,kg});
-  weights.sort((a,b)=>a.d.localeCompare(b.d)); save(LS_WT,weights); wtKg.value=""; renderWeight();
+  STATE.weights=STATE.weights.filter(w=>w.d!==d); STATE.weights.push({d,kg});
+  STATE.weights.sort((a,b)=>a.d.localeCompare(b.d)); persist(); wtKg.value=""; renderWeight(); renderCalorie();
 };
 function renderWeight(){
-  if(!weights.length){wtEmpty.style.display="block";wtChart.style.display="none";wtSummary.style.display="none";wtLog.innerHTML="";return;}
-  wtEmpty.style.display="none"; wtSummary.style.display="flex";
-  const first=weights[0].kg,last=weights[weights.length-1].kg,diff=last-first;
+  const W=STATE.weights;
+  if(!W.length){wtEmpty.style.display="block";wtChart.style.display="none";wtSummary.style.display="none";wtLog.innerHTML="";return;}
+  wtEmpty.style.display="none";wtSummary.style.display="flex";
+  const first=W[0].kg,last=W[W.length-1].kg,diff=last-first;
   document.getElementById("wtCurrent").textContent=last.toFixed(1);
-  const chg=document.getElementById("wtChange");
-  chg.textContent=(diff>0?"+":"")+diff.toFixed(1)+" กก."; chg.className="n "+(diff<0?"down":(diff>0?"up":""));
-  drawChart();
-  wtLog.innerHTML=[...weights].reverse().map(w=>
-    `<li><span class="d">${fmtThai(new Date(w.d+"T00:00:00"))}</span><span><span class="kg num">${w.kg.toFixed(1)}</span> กก. <button class="del" data-d="${w.d}" aria-label="ลบ">✕</button></span></li>`).join("");
-  wtLog.querySelectorAll(".del").forEach(b=>b.onclick=()=>{weights=weights.filter(w=>w.d!==b.dataset.d);save(LS_WT,weights);renderWeight();});
+  const chg=document.getElementById("wtChange");chg.textContent=(diff>0?"+":"")+diff.toFixed(1)+" กก.";chg.className="n "+(diff<0?"down":(diff>0?"up":""));
+  lineChart(wtChart,W.map(w=>w.kg),{fmt:v=>v.toFixed(1)});
+  wtLog.innerHTML=[...W].reverse().map(w=>`<li><span class="d">${fmtThai(new Date(w.d+"T00:00:00"))}</span><span><span class="kg num">${w.kg.toFixed(1)}</span> กก. <button class="del" data-d="${w.d}" aria-label="ลบ">✕</button></span></li>`).join("");
+  wtLog.querySelectorAll(".del").forEach(b=>b.onclick=()=>{STATE.weights=STATE.weights.filter(w=>w.d!==b.dataset.d);persist();renderWeight();renderCalorie();});
 }
-function drawChart(){
-  wtChart.style.display="block";
-  const W=400,H=140,pad=22,kgs=weights.map(w=>w.kg);
-  let min=Math.min(...kgs),max=Math.max(...kgs); if(min===max){min-=1;max+=1;}
-  const rng=max-min,n=weights.length;
-  const x=i=>n===1?W/2:pad+(i/(n-1))*(W-pad*2), y=v=>H-pad-((v-min)/rng)*(H-pad*2);
-  const pts=weights.map((w,i)=>[x(i),y(w.kg)]);
+
+/* ================= PACE CHART ================= */
+const paceChart=document.getElementById("paceChart"),paceEmpty=document.getElementById("paceEmpty");
+function paceToSec(s){const m=String(s).trim().match(/^(\d{1,2})[:.\s](\d{1,2})$/);if(!m)return null;return (+m[1])*60+(+m[2]);}
+function renderPaceChart(){
+  const pts=[];
+  PLAN.forEach(w=>w.days.forEach(d=>{if(isRun(d.type)){const l=STATE.logs[`w${w.n}-${d.dk}`];if(l&&l.pace){const s=paceToSec(l.pace);if(s)pts.push(s);}}}));
+  if(!pts.length){paceEmpty.style.display="block";paceChart.style.display="none";return;}
+  paceEmpty.style.display="none";
+  lineChart(paceChart,pts,{invert:true,target:330,fmt:secToPace,H:150});
+}
+function secToPace(s){s=Math.round(s);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+
+/* generic line chart into an <svg>; values array; opts {invert,target,fmt,H} */
+function lineChart(svg,vals,opts={}){
+  const W=400,H=opts.H||140,pad=24,n=vals.length;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.style.display="block";
+  let min=Math.min(...vals),max=Math.max(...vals);
+  if(opts.target!=null){min=Math.min(min,opts.target);max=Math.max(max,opts.target);}
+  if(min===max){min-=1;max+=1;} const rng=max-min;
+  const x=i=>n===1?W/2:pad+(i/(n-1))*(W-pad*2);
+  const y=v=>H-pad-((v-min)/rng)*(H-pad*2);
+  const pts=vals.map((v,i)=>[x(i),y(v)]);
   const line=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
   const area=`M${pts[0][0]} ${H-pad} `+pts.map(p=>"L"+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+` L${pts[n-1][0]} ${H-pad} Z`;
   const dots=pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5" fill="#2F66F5"/>`).join("");
-  wtChart.innerHTML=`<defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2F66F5" stop-opacity=".18"/><stop offset="100%" stop-color="#2F66F5" stop-opacity="0"/></linearGradient></defs>
-    <text x="4" y="13" font-size="10" fill="#9AA0A6">${max.toFixed(1)}</text><text x="4" y="${H-6}" font-size="10" fill="#9AA0A6">${min.toFixed(1)}</text>
-    ${n>1?`<path d="${area}" fill="url(#wg)"/><path d="${line}" fill="none" stroke="#2F66F5" stroke-width="2.5" stroke-linejoin="round"/>`:""}${dots}`;
+  const fmt=opts.fmt||(v=>v);
+  let tgt="";
+  if(opts.target!=null){const ty=y(opts.target);tgt=`<line x1="${pad}" y1="${ty.toFixed(1)}" x2="${W-pad}" y2="${ty.toFixed(1)}" stroke="#12A08C" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${W-pad}" y="${(ty-5).toFixed(1)}" font-size="10" fill="#12A08C" text-anchor="end">เป้า ${fmt(opts.target)}</text>`;}
+  svg.innerHTML=`<defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2F66F5" stop-opacity=".18"/><stop offset="100%" stop-color="#2F66F5" stop-opacity="0"/></linearGradient></defs>
+    <text x="4" y="13" font-size="10" fill="#9AA0A6">${fmt(max)}</text><text x="4" y="${H-6}" font-size="10" fill="#9AA0A6">${fmt(min)}</text>
+    ${n>1?`<path d="${area}" fill="url(#lg)"/><path d="${line}" fill="none" stroke="#2F66F5" stroke-width="2.5" stroke-linejoin="round"/>`:""}${tgt}${dots}`;
 }
 
-/* ===== PACE CALC ===== */
+/* ================= CALORIE ================= */
+const calEls=["calSex","calAge","calH","calW","calAct"].map(id=>document.getElementById(id));
+function renderCalorie(){
+  const [sex,age,h,w,act]=[calEls[0].value,+calEls[1].value,+calEls[2].value,+calEls[3].value,+calEls[4].value];
+  if(!age||!h||!w){return;}
+  const bmr=10*w+6.25*h-5*age+(sex==="m"?5:-161);
+  const tdee=bmr*act, cut=Math.round((tdee-500)/10)*10, pro=Math.round(w*1.8);
+  document.getElementById("calMaint").textContent=Math.round(tdee/10)*10;
+  document.getElementById("calCut").textContent=cut;
+  document.getElementById("calPro").textContent=pro;
+}
+calEls.forEach(el=>el.addEventListener("input",renderCalorie));
+function syncCalWeight(){ if(STATE.weights.length){calEls[3].value=STATE.weights[STATE.weights.length-1].kg;} }
+
+/* ================= PACE CALC ================= */
 const calcPace=document.getElementById("calcPace");
-function parsePace(s){const m=s.trim().match(/^(\d{1,2})[:.\s](\d{1,2})$/);if(!m)return null;const x=(+m[1])*60+(+m[2]);return x>0?x:null;}
 function fmtTime(sec){sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60,p=x=>String(x).padStart(2,"0");return h>0?`${h}:${p(m)}:${p(s)}`:`${m}:${p(s)}`;}
 function renderCalc(){
-  const p=parsePace(calcPace.value);
+  const p=paceToSec(calcPace.value);
   const o=p?{c1:fmtTime(p),c3:fmtTime(p*3),c5:fmtTime(p*5),c10:fmtTime(p*10)}:{c1:"–",c3:"–",c5:"–",c10:"–"};
   calcPace.style.borderColor=p?"var(--line)":"var(--speed)";
   document.getElementById("calc1k").textContent=o.c1;document.getElementById("calc3k").textContent=o.c3;
@@ -711,20 +880,111 @@ function renderCalc(){
 }
 calcPace.addEventListener("input",renderCalc);
 
-/* ===== BOTTOM NAV scroll-spy ===== */
-const navLinks=[...document.querySelectorAll(".bottomnav a")];
-const spy=new IntersectionObserver(es=>{
-  es.forEach(e=>{if(e.isIntersecting){
-    const id=e.target.id; navLinks.forEach(a=>a.classList.toggle("active",a.dataset.t===id));
-  }});
-},{rootMargin:"-45% 0px -50% 0px"});
-["today","plan","routine","tools"].forEach(id=>{const el=document.getElementById(id);if(el)spy.observe(el);});
+/* ================= EXPORT / IMPORT ================= */
+document.getElementById("exportBtn").onclick=()=>{
+  const blob=new Blob([JSON.stringify(STATE,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="runplan-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+const importFile=document.getElementById("importFile");
+document.getElementById("importBtn").onclick=()=>importFile.click();
+importFile.onchange=()=>{
+  const f=importFile.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{
+    const data=JSON.parse(r.result);
+    if(!data||typeof data!=="object")throw 0;
+    if(!confirm("นำเข้าข้อมูลนี้แทนที่ข้อมูลปัจจุบัน?")) return;
+    STATE=normalize(data);persist();applyTheme();refresh();syncCalWeight();renderCalorie();
+    alert("นำเข้าข้อมูลสำเร็จ");
+  }catch(e){alert("ไฟล์ไม่ถูกต้อง");} importFile.value="";};
+  r.readAsText(f);
+};
 
-/* ===== INIT ===== */
-function renderAll(){renderToday();renderNav();renderPanel();renderProgress();}
-renderAll();
+/* ================= RESET ================= */
+document.getElementById("resetBtn").onclick=()=>{
+  if(confirm("ล้างเครื่องหมายซ้อมทั้งหมด? (น้ำหนัก/เพซ/วันเริ่ม ยังอยู่)")){STATE.done={};persist();refresh();}
+};
+
+/* ================= PWA install ================= */
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installRow").style.display="flex";});
+document.getElementById("installBtn").onclick=async()=>{
+  if(!deferredPrompt)return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null;
+  document.getElementById("installRow").style.display="none";
+};
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}
+
+/* ================= FIREBASE SYNC ================= */
+let FB={ready:false,user:null,docRef:null,setDoc:null}, unsub=null, pushT=null;
+const V="10.12.5", base="https://www.gstatic.com/firebasejs/"+V+"/";
+function setSync(state,msg){
+  const dot=document.getElementById("syncDot"),txt=document.getElementById("syncText");
+  dot.className="dotstat"+({synced:" ok",offline:" warn",error:" err",signedout:"",connecting:""}[state]||"");
+  txt.textContent=msg||({connecting:"กำลังเชื่อมต่อ…",offline:"ออฟไลน์ — บันทึกในเครื่อง (ยังไม่ซิงก์)",signedout:"ยังไม่ได้ล็อกอิน — ข้อมูลอยู่ในเครื่องนี้",synced:"ซิงก์แล้ว ☁️",error:"ซิงก์ผิดพลาด — จะลองใหม่"}[state]||"");
+}
+function updateAuthUI(){
+  const inb=document.getElementById("loginBtn"),outb=document.getElementById("logoutBtn"),sub=document.getElementById("syncSub");
+  if(FB.user){inb.style.display="none";outb.style.display="inline-block";sub.textContent="ล็อกอินเป็น "+(FB.user.email||"ผู้ใช้")+" · ซิงก์อัตโนมัติ";}
+  else{inb.style.display="inline-block";outb.style.display="none";sub.textContent="ล็อกอินเพื่อเก็บข้อมูลบนคลาวด์และซิงก์ทุกเครื่อง";}
+}
+function adoptRemote(remote){STATE=normalize(remote);saveLocal();applyTheme();refresh();syncCalWeight();renderCalorie();}
+function cloudPush(now){
+  if(!FB.docRef||!FB.setDoc)return;
+  clearTimeout(pushT);
+  const go=()=>FB.setDoc(FB.docRef,JSON.parse(JSON.stringify(STATE))).then(()=>setSync("synced")).catch(e=>{console.warn(e);setSync("error");});
+  if(now)go(); else pushT=setTimeout(go,900);
+}
+async function initFirebase(){
+  try{
+    setSync("connecting");
+    const appMod=await import(base+"firebase-app.js");
+    const authMod=await import(base+"firebase-auth.js");
+    const fsMod=await import(base+"firebase-firestore.js");
+    const app=appMod.initializeApp(firebaseConfig);
+    let db;
+    try{db=fsMod.initializeFirestore(app,{localCache:fsMod.persistentLocalCache({tabManager:fsMod.persistentSingleTabManager()})});}
+    catch(e){db=fsMod.getFirestore(app);}
+    const auth=authMod.getAuth(app);
+    FB.ready=true; FB.setDoc=fsMod.setDoc;
+    try{await authMod.getRedirectResult(auth);}catch(e){}
+    document.getElementById("loginBtn").onclick=()=>{
+      const p=new authMod.GoogleAuthProvider();
+      authMod.signInWithPopup(auth,p).catch(()=>authMod.signInWithRedirect(auth,p));
+    };
+    document.getElementById("logoutBtn").onclick=()=>authMod.signOut(auth);
+    authMod.onAuthStateChanged(auth,u=>{
+      FB.user=u; updateAuthUI();
+      if(unsub){unsub();unsub=null;}
+      if(!u){FB.docRef=null;setSync("signedout");return;}
+      FB.docRef=fsMod.doc(db,"athletes",u.uid); setSync("synced");
+      unsub=fsMod.onSnapshot(FB.docRef,snap=>{
+        if(!snap.exists()){cloudPush(true);return;}
+        if(snap.metadata.hasPendingWrites)return;
+        const remote=snap.data()||{};
+        if((remote.updatedAt||0)>(STATE.updatedAt||0)) adoptRemote(remote);
+        else if((remote.updatedAt||0)<(STATE.updatedAt||0)) cloudPush(true);
+      },err=>{console.warn(err);setSync("error");});
+    });
+  }catch(e){console.warn("Firebase unavailable",e);setSync("offline");updateAuthUI();}
+}
+
+/* ================= SCROLL SPY ================= */
+const navLinks=[...document.querySelectorAll(".bottomnav a")];
+const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navLinks.forEach(a=>a.classList.toggle("active",a.dataset.t===e.target.id));}});},{rootMargin:"-45% 0px -50% 0px"});
+["today","plan","routine","tools","settings"].forEach(id=>{const el=document.getElementById(id);if(el)spy.observe(el);});
+
+/* ================= INIT ================= */
+function refresh(){renderToday();renderNav();renderPanel();renderProgress();renderPaceChart();}
+applyTheme();
+refresh();
 renderWeight();
+syncCalWeight();
+renderCalorie();
 renderCalc();
+renderTimeline("train");
+initFirebase();
 </script>
 </body>
 </html>

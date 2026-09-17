@@ -1,0 +1,18 @@
+{
+  "name": "แผนวิ่ง 12 สัปดาห์ · 8:00 → 5:30",
+  "short_name": "RunPlan 5:30",
+  "description": "แผนวิ่ง + เวทเทรนนิ่ง 12 สัปดาห์ ลดไขมันและทำเพซ 5:30",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F1218",
+  "theme_color": "#0F1218",
+  "lang": "th",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

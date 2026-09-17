@@ -250,6 +250,43 @@
     .grid2,.nutgrid{grid-template-columns:1fr 1fr;}
     section{padding:30px 0;}
   }
+  /* TIMER FAB + SHEET */
+  .fab{position:fixed;right:16px;z-index:60;bottom:calc(var(--navh) + env(safe-area-inset-bottom) + 16px);
+    min-width:58px;height:58px;padding:0 6px;border-radius:100px;border:none;cursor:pointer;
+    background:var(--brand);color:#fff;box-shadow:0 6px 20px rgba(47,102,245,.45);
+    display:flex;align-items:center;justify-content:center;gap:6px;font-size:24px;line-height:1;transition:transform .12s;}
+  .fab:active{transform:scale(.94);}
+  .fab .ft{font-family:"Barlow Condensed";font-weight:700;font-size:19px;font-variant-numeric:tabular-nums;display:none;}
+  .fab.live{background:var(--speed);box-shadow:0 6px 20px rgba(232,80,58,.5);animation:fabpulse 1.6s ease-in-out infinite;}
+  .fab.live .fico{display:none;} .fab.live .ft{display:inline;}
+  .fab.sw.live{background:var(--endure);box-shadow:0 6px 20px rgba(18,160,140,.5);}
+  @keyframes fabpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+  .timer-overlay{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.5);display:none;align-items:flex-end;}
+  .timer-overlay.open{display:flex;}
+  .timer-sheet{background:var(--surface);width:100%;max-width:var(--maxw);margin:0 auto;border-radius:22px 22px 0 0;
+    padding:12px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -12px 44px rgba(0,0,0,.35);}
+  .sheet-handle{width:42px;height:5px;border-radius:100px;background:var(--line);margin:0 auto 10px;}
+  .sheet-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .sheet-top h3{margin:0;font-size:16px;font-weight:700;}
+  .sheet-x{background:var(--line-2);border:none;color:var(--ink);width:32px;height:32px;border-radius:100px;font-size:16px;cursor:pointer;}
+  .timer-display{font-family:"Barlow Condensed";font-weight:700;font-variant-numeric:tabular-nums;
+    font-size:clamp(64px,22vw,96px);line-height:1;text-align:center;letter-spacing:.01em;margin:6px 0 4px;color:var(--ink);}
+  .timer-display.warn{color:var(--tempo);} .timer-display.fin{color:var(--good);}
+  .timer-sub{text-align:center;color:var(--muted);font-size:12.5px;min-height:16px;margin-bottom:14px;}
+  .tchips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none;}
+  .tchips::-webkit-scrollbar{display:none;}
+  .tchip{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:9px 15px;
+    font-family:"Barlow Condensed";font-weight:600;font-size:16px;color:var(--ink);cursor:pointer;}
+  .tchip.on{background:var(--brand);color:#fff;border-color:var(--brand);}
+  .tctrl{display:flex;gap:10px;align-items:stretch;}
+  .tbtn{flex:1;border:none;border-radius:13px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .tbtn.go{background:var(--good);color:#fff;} .tbtn.pause{background:var(--tempo);color:#fff;}
+  .tbtn.ghost{flex:0 0 auto;background:var(--line-2);color:var(--ink);width:56px;font-size:20px;}
+  .tadj{display:flex;justify-content:center;gap:10px;margin-bottom:14px;}
+  .tadj button{background:var(--line-2);border:none;border-radius:9px;padding:8px 14px;font-family:"Barlow Condensed";font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;}
+  .timer-opts{display:flex;justify-content:center;gap:16px;margin-top:14px;font-size:13px;color:var(--muted);}
+  .timer-opts button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;display:flex;align-items:center;gap:5px;}
+  .timer-opts button.on{color:var(--brand);}
   @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
 </style>
 </head>
@@ -486,6 +523,39 @@
   </section>
 
   <footer>แผนนี้เป็นแนวทางทั่วไป ไม่ใช่คำแนะนำทางการแพทย์<br><b>สู้ๆ ครับ — วิ่งให้สนุก แล้วเพซจะตามมาเอง 🏃</b></footer>
+</div>
+
+<button class="fab" id="fab" aria-label="นาฬิกาจับเวลา"><span class="fico">⏱️</span><span class="ft" id="fabTime"></span></button>
+
+<div class="timer-overlay" id="timerOverlay">
+  <div class="timer-sheet" id="timerSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-top">
+      <h3>⏱️ นาฬิกาจับเวลา</h3>
+      <button class="sheet-x" id="timerClose" aria-label="ปิด">✕</button>
+    </div>
+    <div class="toggle-row" id="timerMode">
+      <button class="on" data-m="cd">พักระหว่างเซต</button>
+      <button data-m="sw">จับเวลาเดินหน้า</button>
+    </div>
+    <div class="timer-display" id="timerDisp">01:00</div>
+    <div class="timer-sub" id="timerSub">เลือกเวลาพัก แล้วกดเริ่ม</div>
+    <div class="tchips" id="timerChips"></div>
+    <div class="tadj" id="timerAdj">
+      <button data-adj="-15">−15 วิ</button>
+      <button data-adj="15">+15 วิ</button>
+      <button data-adj="30">+30 วิ</button>
+      <button data-adj="60">+1 นาที</button>
+    </div>
+    <div class="tctrl">
+      <button class="tbtn ghost" id="timerReset" aria-label="รีเซ็ต">↺</button>
+      <button class="tbtn go" id="timerToggle">เริ่ม</button>
+    </div>
+    <div class="timer-opts">
+      <button id="timerSound" class="on">🔊 เสียงเตือน</button>
+      <span id="timerWake">📱 กันจอดับขณะจับเวลา</span>
+    </div>
+  </div>
 </div>
 
 <nav class="bottomnav" id="bottomnav">
@@ -738,8 +808,12 @@ function renderPanel(){
       ${rest?"":`<div class="check"></div>`}
     </div>`;
     if(!rest){
-      h+=`<div style="margin:-4px 0 0 0;">
+      const restSec=d.type==="strength"?90:(d.type==="speed"?120:0);
+      h+=`<div style="margin:-4px 0 0 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <button class="logbtn" data-log="${id}">＋ บันทึกผล / โน้ต</button>
+        ${restSec?`<button class="logbtn restbtn" data-rest="${restSec}">⏱ จับเวลาพัก ${secToPace(restSec)}</button>`:""}
+      </div>
+      <div style="margin-top:6px;">
         <div class="logform" id="lf-${id}">
           ${isRun(d.type)?`<div class="lr"><label>เพซจริง</label><input type="text" id="lp-${id}" value="${log.pace||""}" placeholder="เช่น 6:15" inputmode="decimal"></div>`:""}
           <div class="lr"><label>โน้ต</label><input type="text" id="ln-${id}" value="${log.note?escapeAttr(log.note):""}" placeholder="รู้สึกยังไง / อากาศ"></div>
@@ -756,8 +830,12 @@ function renderPanel(){
     el.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();t();}});
   });
   // open log form
-  weekPanel.querySelectorAll(".logbtn").forEach(b=>b.addEventListener("click",()=>{
+  weekPanel.querySelectorAll(".logbtn[data-log]").forEach(b=>b.addEventListener("click",()=>{
     document.getElementById("lf-"+b.dataset.log).classList.toggle("open");
+  }));
+  // quick rest timer from a set
+  weekPanel.querySelectorAll(".restbtn").forEach(b=>b.addEventListener("click",()=>{
+    openTimer("cd"); tapPreset(+b.dataset.rest);
   }));
   // save log
   weekPanel.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",()=>{
@@ -975,6 +1053,147 @@ const navLinks=[...document.querySelectorAll(".bottomnav a")];
 const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navLinks.forEach(a=>a.classList.toggle("active",a.dataset.t===e.target.id));}});},{rootMargin:"-45% 0px -50% 0px"});
 ["today","plan","routine","tools","settings"].forEach(id=>{const el=document.getElementById(id);if(el)spy.observe(el);});
 
+/* ================= TIMER (จับเวลา / นับถอยหลัง) ================= */
+const TMR={mode:"cd",running:false,endAt:0,remain:60000,preset:60,swStart:0,swAcc:0,raf:null,wake:null,soundOn:true,ac:null};
+const PRESETS=[30,45,60,90,120,180,300];
+const $t=id=>document.getElementById(id);
+try{const p=JSON.parse(localStorage.getItem("tp_timer")||"{}");
+  if(PRESETS.includes(p.preset))TMR.preset=p.preset;
+  if(typeof p.soundOn==="boolean")TMR.soundOn=p.soundOn;
+  TMR.remain=TMR.preset*1000;}catch(e){}
+function saveTimerPref(){try{localStorage.setItem("tp_timer",JSON.stringify({preset:TMR.preset,soundOn:TMR.soundOn}));}catch(e){}}
+function fmtSec(s){s=Math.max(0,s);const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),ss=s%60,p=x=>String(x).padStart(2,"0");return h>0?`${h}:${p(m)}:${p(ss)}`:`${p(m)}:${p(ss)}`;}
+function nowMs(){return Date.now();}
+function currentMs(){
+  if(TMR.mode==="cd") return TMR.running?Math.max(0,TMR.endAt-nowMs()):TMR.remain;
+  return TMR.swAcc+(TMR.running?nowMs()-TMR.swStart:0);
+}
+function setDisp(){
+  const cd=TMR.mode==="cd",ms=currentMs();
+  const secs=cd?Math.ceil(ms/1000):Math.floor(ms/1000);
+  const d=$t("timerDisp");
+  d.textContent=fmtSec(secs);
+  d.className="timer-display"+(cd&&TMR.running&&ms<=10000&&ms>0?" warn":"")+(cd&&ms<=0&&!TMR.running?" fin":"");
+}
+function updateFab(){
+  const fab=$t("fab");
+  if(TMR.running){
+    fab.classList.add("live");fab.classList.toggle("sw",TMR.mode==="sw");
+    const ms=currentMs(),secs=TMR.mode==="cd"?Math.ceil(ms/1000):Math.floor(ms/1000);
+    $t("fabTime").textContent=fmtSec(secs);
+  }else{fab.classList.remove("live");fab.classList.remove("sw");}
+}
+function renderChips(){
+  const box=$t("timerChips");box.innerHTML="";
+  PRESETS.forEach(sec=>{
+    const b=document.createElement("button");
+    b.className="tchip"+(TMR.mode==="cd"&&TMR.preset===sec?" on":"");
+    b.textContent=sec<60?sec+"วิ":fmtSec(sec);
+    b.onclick=()=>tapPreset(sec);
+    box.appendChild(b);
+  });
+}
+function renderTimerUI(){
+  const cd=TMR.mode==="cd";
+  $t("timerChips").style.display=cd?"flex":"none";
+  $t("timerAdj").style.display=cd?"flex":"none";
+  [...$t("timerMode").children].forEach(b=>b.classList.toggle("on",b.dataset.m===TMR.mode));
+  const t=$t("timerToggle");
+  const resumeable=cd?(TMR.remain>0&&TMR.remain<TMR.preset*1000):(TMR.swAcc>0);
+  t.textContent=TMR.running?"หยุด":(resumeable?"เล่นต่อ":"เริ่ม");
+  t.className="tbtn "+(TMR.running?"pause":"go");
+  $t("timerSub").textContent=TMR.running?(cd?"กำลังนับถอยหลัง…":"กำลังจับเวลา…"):(cd?"เลือกเวลาพัก แล้วกดเริ่ม":"กดเริ่มเพื่อจับเวลา");
+  renderChips();
+}
+function ensureAudio(){
+  try{if(!TMR.ac){const AC=window.AudioContext||window.webkitAudioContext;if(AC)TMR.ac=new AC();}
+    if(TMR.ac&&TMR.ac.state==="suspended")TMR.ac.resume();}catch(e){}
+}
+function beep(){
+  if(!TMR.soundOn)return;ensureAudio();const ac=TMR.ac;if(!ac)return;
+  const t0=ac.currentTime;
+  [0,0.28,0.56].forEach((off,i)=>{
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.type="sine";o.frequency.value=i===2?1245:880;
+    o.connect(g);g.connect(ac.destination);
+    g.gain.setValueAtTime(0.0001,t0+off);
+    g.gain.exponentialRampToValueAtTime(0.45,t0+off+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+off+0.22);
+    o.start(t0+off);o.stop(t0+off+0.24);
+  });
+}
+function vibrate(){try{if(navigator.vibrate)navigator.vibrate([220,120,220,120,420]);}catch(e){}}
+async function acquireWake(){try{if("wakeLock" in navigator&&!TMR.wake){TMR.wake=await navigator.wakeLock.request("screen");TMR.wake.addEventListener&&TMR.wake.addEventListener("release",()=>{TMR.wake=null;});}}catch(e){}}
+function releaseWake(){try{if(TMR.wake){TMR.wake.release();TMR.wake=null;}}catch(e){}}
+function loop(){
+  cancelAnimationFrame(TMR.raf);
+  const step=()=>{
+    setDisp();updateFab();
+    if(TMR.mode==="cd"&&TMR.running&&currentMs()<=0){finishCd();return;}
+    if(TMR.running)TMR.raf=requestAnimationFrame(step);
+  };
+  step();
+}
+function startRun(){
+  ensureAudio();
+  if(TMR.mode==="cd"){if(TMR.remain<=0)TMR.remain=TMR.preset*1000;TMR.endAt=nowMs()+TMR.remain;}
+  else{TMR.swStart=nowMs();}
+  TMR.running=true;acquireWake();loop();renderTimerUI();
+}
+function pauseRun(){
+  if(TMR.mode==="cd")TMR.remain=Math.max(0,TMR.endAt-nowMs());
+  else TMR.swAcc+=nowMs()-TMR.swStart;
+  TMR.running=false;cancelAnimationFrame(TMR.raf);releaseWake();setDisp();updateFab();renderTimerUI();
+}
+function toggleRun(){TMR.running?pauseRun():startRun();}
+function resetTimer(){
+  TMR.running=false;cancelAnimationFrame(TMR.raf);releaseWake();
+  if(TMR.mode==="cd")TMR.remain=TMR.preset*1000;else TMR.swAcc=0;
+  setDisp();updateFab();renderTimerUI();$t("timerSub").textContent=TMR.mode==="cd"?"เลือกเวลาพัก แล้วกดเริ่ม":"กดเริ่มเพื่อจับเวลา";
+}
+function finishCd(){
+  TMR.running=false;TMR.remain=0;cancelAnimationFrame(TMR.raf);releaseWake();
+  setDisp();updateFab();renderTimerUI();beep();vibrate();
+  $t("timerSub").textContent="ครบเวลาพักแล้ว! 💪 พร้อมเซตต่อไป";
+}
+function tapPreset(sec){
+  TMR.mode="cd";TMR.preset=sec;TMR.remain=sec*1000;saveTimerPref();
+  startRun();renderChips();
+}
+function adjust(sec){
+  if(TMR.mode!=="cd")return;
+  if(TMR.running){TMR.endAt+=sec*1000;if(TMR.endAt<nowMs())TMR.endAt=nowMs();}
+  else{TMR.remain=Math.max(0,TMR.remain+sec*1000);}
+  setDisp();updateFab();
+}
+function setMode(m){
+  if(m===TMR.mode)return;
+  TMR.running=false;cancelAnimationFrame(TMR.raf);releaseWake();
+  TMR.mode=m;
+  if(m==="cd")TMR.remain=TMR.preset*1000;else TMR.swAcc=0;
+  setDisp();updateFab();renderTimerUI();
+}
+function openTimer(m){
+  if(m&&m!==TMR.mode)setMode(m);
+  $t("timerOverlay").classList.add("open");
+  ensureAudio();renderTimerUI();setDisp();
+}
+function closeTimer(){$t("timerOverlay").classList.remove("open");}
+function initTimer(){
+  $t("fab").onclick=()=>{$t("timerOverlay").classList.contains("open")?closeTimer():openTimer();};
+  $t("timerClose").onclick=closeTimer;
+  $t("timerOverlay").addEventListener("click",e=>{if(e.target===$t("timerOverlay"))closeTimer();});
+  [...$t("timerMode").children].forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+  $t("timerAdj").querySelectorAll("button").forEach(b=>b.onclick=()=>adjust(+b.dataset.adj));
+  $t("timerToggle").onclick=toggleRun;
+  $t("timerReset").onclick=resetTimer;
+  const sb=$t("timerSound");
+  sb.classList.toggle("on",TMR.soundOn);sb.textContent=(TMR.soundOn?"🔊":"🔇")+" เสียงเตือน";
+  sb.onclick=()=>{TMR.soundOn=!TMR.soundOn;sb.classList.toggle("on",TMR.soundOn);sb.textContent=(TMR.soundOn?"🔊":"🔇")+" เสียงเตือน";saveTimerPref();if(TMR.soundOn){ensureAudio();beep();}};
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){if(TMR.running){if(!TMR.wake)acquireWake();loop();}setDisp();updateFab();}});
+  renderTimerUI();setDisp();updateFab();
+}
+
 /* ================= INIT ================= */
 function refresh(){renderToday();renderNav();renderPanel();renderProgress();renderPaceChart();}
 applyTheme();
@@ -984,6 +1203,7 @@ syncCalWeight();
 renderCalorie();
 renderCalc();
 renderTimeline("train");
+initTimer();
 initFirebase();
 </script>
 </body>

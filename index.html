@@ -835,7 +835,7 @@ function renderPanel(){
   }));
   // quick rest timer from a set
   weekPanel.querySelectorAll(".restbtn").forEach(b=>b.addEventListener("click",()=>{
-    openTimer("cd"); tapPreset(+b.dataset.rest);
+    openTimer("cd"); quickRest(+b.dataset.rest);
   }));
   // save log
   weekPanel.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",()=>{
@@ -1156,10 +1156,13 @@ function finishCd(){
   setDisp();updateFab();renderTimerUI();beep();vibrate();
   $t("timerSub").textContent="ครบเวลาพักแล้ว! 💪 พร้อมเซตต่อไป";
 }
-function tapPreset(sec){
+function setPreset(sec){
   TMR.mode="cd";TMR.preset=sec;TMR.remain=sec*1000;saveTimerPref();
-  startRun();renderChips();
+  TMR.running=false;cancelAnimationFrame(TMR.raf);releaseWake();
+  setDisp();updateFab();renderTimerUI();
 }
+function tapPreset(sec){ setPreset(sec); }          /* ปุ่มเวลาในแผง: ตั้งเวลาเฉยๆ ไม่เริ่มเอง */
+function quickRest(sec){ setPreset(sec); startRun(); } /* ปุ่มลัดในการ์ด: ตั้ง + เริ่มทันที */
 function adjust(sec){
   if(TMR.mode!=="cd")return;
   if(TMR.running){TMR.endAt+=sec*1000;if(TMR.endAt<nowMs())TMR.endAt=nowMs();}
